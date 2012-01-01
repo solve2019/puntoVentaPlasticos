@@ -196,8 +196,8 @@ public class P2productoslogistica extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
-        LogisticaP1 logistica=new LogisticaP1();
-        logistica.setVisible(true);
+      BolsasP1 bolsa1=new BolsasP1();
+        bolsa1.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 

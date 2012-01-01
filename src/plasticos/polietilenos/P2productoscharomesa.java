@@ -197,8 +197,8 @@ public class P2productoscharomesa extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
-        PolietilenoP1 polietileno=new PolietilenoP1();
-        polietileno.setVisible(true);
+        BolsasP1 bolsa1=new BolsasP1();
+        bolsa1.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 

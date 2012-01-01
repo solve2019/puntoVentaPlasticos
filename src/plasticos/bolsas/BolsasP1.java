@@ -277,26 +277,58 @@ public class BolsasP1 extends javax.swing.JFrame {
                                 P2tapavasoplastico P2tapa = new P2tapavasoplastico();
                                 P2tapa.setVisible(true);
                                 dispose();
+                            } else if (nombre.equalsIgnoreCase("INICIO")) {
+                                Inicial Inic = new Inicial();
+                                Inic.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("INICIO")) {
+                                Inicial Inic = new Inicial();
+                                Inic.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("INICIO")) {
+                                Inicial Inic = new Inicial();
+                                Inic.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("INICIO")) {
+                                Inicial Inic = new Inicial();
+                                Inic.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("INICIO")) {
+                                Inicial Inic = new Inicial();
+                                Inic.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("INICIO")) {
+                                Inicial Inic = new Inicial();
+                                Inic.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("INICIO")) {
+                                Inicial Inic = new Inicial();
+                                Inic.setVisible(true);
+                                dispose();
                             } else {
                             }
-
 //fin *********************************************************************************************
+                            }
+
                         }
 
-                    });
+                        );
 
-                    add(btn);
-                    jPanel1.add(btn);
+                        add(btn);
+
+                        jPanel1.add (btn);
+
+                    }
 
                 }
-
-            }
-        } else {
+            }else {
 
         }
-        //******************
+            //******************
 
-    }
+        }
+
+    
 
     public List<catalogo> obtenerSubCatalogos() {
         List<catalogo> lista = new ArrayList<catalogo>();

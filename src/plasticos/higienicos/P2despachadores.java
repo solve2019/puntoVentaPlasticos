@@ -239,8 +239,8 @@ public class P2despachadores extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
-        HigienicosP1 cintas1=new HigienicosP1();
-        cintas1.setVisible(true);
+       BolsasP1 bolsa1=new BolsasP1();
+        bolsa1.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 
