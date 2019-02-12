@@ -247,8 +247,8 @@ public class P2Agranel extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        /*BolsasP1 bolsa1=new BolsasP1();
-        bolsa1.setVisible(true);*/
+        BolsasP1 bolsa1=new BolsasP1();
+        bolsa1.setVisible(true);
         dispose();
         
     }//GEN-LAST:event_jButton2ActionPerformed

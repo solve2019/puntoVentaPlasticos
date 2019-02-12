@@ -104,7 +104,7 @@ public class BolsasP1 extends javax.swing.JFrame {
                                 
                                 P2Agranel p2a = new P2Agranel();
                                 p2a.setVisible(true);
-                               
+                               dispose();
                             } else if (nombre.equalsIgnoreCase("BASURA")) {
                                 BolsasP1 b = new BolsasP1();
                                 b.setVisible(true);
@@ -113,6 +113,7 @@ public class BolsasP1 extends javax.swing.JFrame {
                                 
                                 Inicial Inic = new Inicial();
                                 Inic.setVisible(true);
+                                dispose();
                                 
                             } else {
                             }
