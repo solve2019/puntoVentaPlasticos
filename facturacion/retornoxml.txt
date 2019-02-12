@@ -1,0 +1,1 @@
+com.sun.xml.internal.ws.fault.ServerSOAPFaultException: Client received SOAP Fault from server: CFDI33142 El campo ClaveProdServ, no contiene un valor del catálogo c_ClaveProdServ. Please see the server log to find more detail regarding exact cause of the failure.

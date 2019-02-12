@@ -1,0 +1,23 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:cancelaCFDIPruebas>
+         <tem:id_emisor_integrador>0B7091FC-4970-4CDA-B443-FBE2AFA66854</tem:id_emisor_integrador>
+         <!--Optional:-->
+         <tem:nombreUsuario>SAB09083</tem:nombreUsuario>
+         <!--Optional:-->
+         <tem:contrasena>e283$P5p</tem:contrasena>
+         <!--Optional:-->
+         <tem:rfcEmisor>KSL1402183981</tem:rfcEmisor>
+         <!--Optional:-->
+         <tem:listaUuid>
+            <!--Zero or more repetitions:-->
+            <tem:guid>0703D6E1-FF11-44C9-8DC4-114FF9BF2339</tem:guid>
+         </tem:listaUuid>
+         <!--Optional:-->
+         <tem:pfxBase64>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</tem:pfxBase64>
+         <!--Optional:-->
+         <tem:contrasenaPfx>Sell0k0Nn3n2014</tem:contrasenaPfx>
+      </tem:cancelaCFDIPruebas>
+   </soapenv:Body>
+</soapenv:Envelope>

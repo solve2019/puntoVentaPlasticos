@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="factura_template" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="factura" class="java.lang.String"/>
+	<parameter name="razonsocial" class="java.lang.String"/>
+	<parameter name="fechaemision" class="java.lang.String"/>
+	<parameter name="rutaimagen" class="java.lang.String"/>
+	<parameter name="rutacodbar" class="java.lang.String"/>
+	<parameter name="observacion" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select cantidad,codbarprod,nombre_producto from to_traspasos,tc_productos where tc_productos.codigo_barras=to_traspasos.codbarprod and id_nota_traspaso=$P{factura}]]>
+	</queryString>
+	<field name="cantidad" class="java.lang.Integer"/>
+	<field name="codbarprod" class="java.lang.String"/>
+	<field name="nombre_producto" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="80" splitType="Stretch">
+			<rectangle>
+				<reportElement x="383" y="23" width="188" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="391" y="27" width="43" height="20"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="383" y="43" width="188" height="34"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="391" y="47" width="43" height="20"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="383" y="7" width="166" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TRANSFERENCIA ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="440" y="27" width="100" height="16"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{factura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="438" y="47" width="132" height="20"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{fechaemision}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="14" y="10" width="284" height="67"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{rutaimagen}+"logofactura.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="3" width="572" height="26"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="4" y="7" width="378" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{razonsocial}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<rectangle>
+				<reportElement x="5" y="0" width="564" height="18"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="9" y="3" width="50" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="96" y="3" width="286" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="418" y="3" width="153" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codigo de Barras]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<rectangle>
+				<reportElement x="5" y="0" width="564" height="19"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="96" y="2" width="313" height="14"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombre_producto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="1" width="72" height="14"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="418" y="2" width="150" height="14"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{codbarprod}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="119" splitType="Stretch">
+			<image>
+				<reportElement x="43" y="10" width="100" height="100"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{rutacodbar}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="203" y="27" width="365" height="83"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{observacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="203" y="13" width="153" height="14"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Observación:]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

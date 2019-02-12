@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="130" pageHeight="85" columnWidth="130" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codigo_barra" class="java.lang.String"/>
+	<parameter name="folio" class="java.lang.String"/>
+	<parameter name="vendedor" class="java.lang.String"/>
+	<parameter name="fecha" class="java.lang.String"/>
+	<parameter name="total" class="java.lang.String"/>
+	<parameter name="precioventa" class="java.lang.String"/>
+	<parameter name="preciomayoreo" class="java.lang.String"/>
+	<parameter name="empresa" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select * from to_parametros limit 1]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer"/>
+	<field name="clave" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="parametro" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="85" splitType="Stretch">
+			<componentElement>
+				<reportElement x="4" y="31" width="123" height="44"/>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" moduleWidth="1.0">
+					<jr:codeExpression><![CDATA[$P{codigo_barra}]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
+			<textField>
+				<reportElement x="5" y="6" width="122" height="11"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{folio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="17" width="54" height="11"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{precioventa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="74" y="17" width="53" height="11"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{preciomayoreo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="75" width="122" height="8"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{empresa}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
