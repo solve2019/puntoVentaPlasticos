@@ -18,6 +18,17 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import plasticos.Inicial;
 import javax.swing.ImageIcon;
+import plasticos.desechables.*;
+import plasticos.bolsas.*;
+import plasticos.cintas.*;
+import plasticos.desechables.*;
+import plasticos.higienicos.*;
+import plasticos.logistica.*;
+import plasticos.limpieza.*;
+import plasticos.madera.*;
+import plasticos.polietilenos.P2productoscharomesa;
+import plasticos.polietilenos.P2productospolietileno;
+import plasticos.polietilenos.*;
 
 import puntoventa.variableEstaticas;
 
@@ -26,18 +37,16 @@ import puntoventa.variableEstaticas;
  * @author desarrollo8
  */
 public class BolsasP1 extends javax.swing.JFrame {
-   
+
     /**
      * Creates new form BosasP1
      */
     //declaramos una varibale donde se 
     //guardar el nombre del catalogo para hacer consulta y mostar los  botones del subcatalogo
-   
-
     public BolsasP1() {
         setExtendedState(MAXIMIZED_BOTH);
         initComponents();
-        System.out.println("entro "  + variableEstaticas.nombreCatalogo);
+        System.out.println("entro " + variableEstaticas.nombreCatalogo);
         int costado = 20, top = 20, ancho = 250, alto = 80;
         boolean ban = false;
 
@@ -80,7 +89,7 @@ public class BolsasP1 extends javax.swing.JFrame {
                     contador++;
 
                     if (contador == contador2) {
-                      
+
                         costado = 20;
                         top = top + alto;
                         contador2 += 5;
@@ -98,27 +107,180 @@ public class BolsasP1 extends javax.swing.JFrame {
                             JButton obj = (JButton) e.getSource();
                             String nombre = obj.getText();
 
-                            //aqui ********************
+                            //aqui **************************************************************************************
                             if (nombre.equals("")) {
                             } else if (nombre.equalsIgnoreCase("AGRANEL")) {
-                                
-                                P2Agranel p2a = new P2Agranel();
-                                p2a.setVisible(true);
-                               dispose();
+                                P2Agranel p2agrane = new P2Agranel();
+                                p2agrane.setVisible(true);
+                                dispose();
                             } else if (nombre.equalsIgnoreCase("BASURA")) {
-                                BolsasP1 b = new BolsasP1();
-                                b.setVisible(true);
-                                
+                                P2basura p2basura = new P2basura();
+                                p2basura.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("ESPECIALES")) {
+                                P2especiales p2espec = new P2especiales();
+                                p2espec.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("HOJAS (LAMINILLAS)")) {
+                                P2laminas p2lamin = new P2laminas();
+                                p2lamin.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("ASAS")) {
+                                P2asas p2asa = new P2asas();
+                                p2asa.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("ROLLOS")) {
+                                P2rollos p2rollos = new P2rollos();
+                                p2rollos.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("LOGISTICA")) {
+                                P2productoslogistica logistica = new P2productoslogistica();
+                                logistica.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("GRADO ALIMENTICIO")) {
+                                P2productosgradomesa gradoalimenticio = new P2productosgradomesa();
+                                gradoalimenticio.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("RAFIA")) {
+                                P2productosrafia rafia = new P2productosrafia();
+                                rafia.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("CHAROLAS")) {
+                                P2charolas p2charo = new P2charolas();
+                                p2charo.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("VASO PLASTICO")) {
+                                P2vasoplastico p2vasoplas = new P2vasoplastico();
+                                p2vasoplas.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("VASO TERMICO")) {
+                                P2vasoplastico p2vasoplas = new P2vasoplastico();
+                                p2vasoplas.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("PLATOS")) {
+                                P2platos p2platos = new P2platos();
+                                p2platos.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("CONTENEDORES")) {
+                                P2contenedores p2contene = new P2contenedores();
+                                p2contene.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("CUBIERTOS")) {
+                                P2cubierto p2cubierto = new P2cubierto();
+                                p2cubierto.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("POPOTE")) {
+                                P2popote p2popote = new P2popote();
+                                p2popote.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("ALUMINIO")) {
+                                P2aluminio aluminio = new P2aluminio();
+                                aluminio.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("POLIETILENOS")) {
+                                P2productospolietileno polietileno = new P2productospolietileno();
+                                polietileno.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("CHAROMESA")) {
+                                P2productoscharomesa charo = new P2productoscharomesa();
+                                charo.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("ESCOBAS")) {
+                                P2escoba escoba = new P2escoba();
+                                escoba.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("MECHUDOS")) {
+                                P2mechudo mechudo = new P2mechudo();
+                                mechudo.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("FRANELA")) {
+                                P2franela franela = new P2franela();
+                                franela.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("QUIMICOS")) {
+                                P2quimicos qumicos = new P2quimicos();
+                                qumicos.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("JARCERIA")) {
+                                P2jarceria jarceria = new P2jarceria();
+                                jarceria.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("JERGA")) {
+                                P2jerga jerga = new P2jerga();
+                                jerga.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("DESPACHADORES")) {
+                                P2despachadores toallas = new P2despachadores();
+                                toallas.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("HIGIENICO LINEAS")) {
+                                P2linea8 linea8 = new P2linea8();
+                                linea8.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("TRADICIONALES")) {
+                                P2tradicionales tradicionales = new P2tradicionales();
+                                tradicionales.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("SERVILLETAS")) {
+                                P2servilletas servi = new P2servilletas();
+                                servi.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("TOALLAS")) {
+                                P2toallas toallas = new P2toallas();
+                                toallas.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("ESTRAZA")) {
+                                P2estraza estraza = new P2estraza();
+                                estraza.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("MADERA")) {
+                                P2made madera = new P2made();
+                                madera.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("CANELA")) {
+                                P2canda p2cinta = new P2canda();
+                                p2cinta.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("TRANSPARENTE")) {
+                                P2cintas p2cinta = new P2cintas();
+                                p2cinta.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("COLORES")) {
+                                P2colores p2cinta = new P2colores();
+                                p2cinta.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("IMPRESAS")) {
+                                P2impresas p2impresa = new P2impresas();
+                                p2impresa.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("MASKING")) {
+                                P2masking p2cinta = new P2masking();
+                                p2cinta.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("DUCTO")) {
+                                P2ducto p2cinta = new P2ducto();
+                                p2cinta.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("ELECTRICAS")) {
+                                P2electricas p2cinta = new P2electricas();
+                                p2cinta.setVisible(true);
+                                dispose();
                             } else if (nombre.equalsIgnoreCase("INICIO")) {
-                                
                                 Inicial Inic = new Inicial();
                                 Inic.setVisible(true);
                                 dispose();
-                                
+                            } else if (nombre.equalsIgnoreCase("TAPAS VASO TERMICO")) {
+                                P2tapavasotermico P2ta = new P2tapavasotermico();
+                                P2ta.setVisible(true);
+                                dispose();
+                            } else if (nombre.equalsIgnoreCase("TAPAS VASO PLASTICO")) {
+                                P2tapavasoplastico P2tapa = new P2tapavasoplastico();
+                                P2tapa.setVisible(true);
+                                dispose();
                             } else {
                             }
-                            //fin *********
 
+//fin *********************************************************************************************
                         }
 
                     });
