@@ -65,7 +65,8 @@ import jinternalPanel.Ventas;
 import jinternalPanel.EsteticaRep;
 import jinternalPanel.RestMesas;
 import plasticos.Inicial;
-import serviciotecnico.ServicioTec;
+
+import serviciotecnico.ServicioTec;   
 
 /**
  *
@@ -77,6 +78,7 @@ public class PantallaPrincipal extends javax.swing.JFrame implements KeyListener
      */
     public PantallaPrincipal() {
         initComponents();
+        setTitle("Inicio");
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         String rutaicon="/images/icono.png";        

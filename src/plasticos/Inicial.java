@@ -5,7 +5,20 @@
  */
 package plasticos;
 
+import bean.catalogo;
+import conexion.conex;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import plasticos.bolsas.BolsasP1;
+
 import plasticos.cintas.CintasP1;
 import plasticos.desechables.DesechablesP1;
 import plasticos.higienicos.HigienicosP1;
@@ -13,6 +26,7 @@ import plasticos.limpieza.LimpiezaP1;
 import plasticos.logistica.LogisticaP1;
 import plasticos.madera.MaderaP1;
 import plasticos.polietilenos.PolietilenoP1;
+import puntoventa.variableEstaticas;
 
 /**
  *
@@ -24,8 +38,87 @@ public class Inicial extends javax.swing.JFrame {
      * Creates new form Inicial
      */
     public Inicial() {
-        setExtendedState(MAXIMIZED_BOTH);
+        setExtendedState(MAXIMIZED_BOTH);  
         initComponents();
+ 
+        List<catalogo> lista = obtenerCatalogoPrincipal();
+        if (lista.size() > 0) {
+           
+            int contador=0;
+             int contador2=5;
+             int valorTop=6;
+            JButton btn;
+            int costado = 20, top = 20, ancho = 250, alto = 80;
+            boolean ban=false;
+            for (int i = 0; i < lista.size(); i++) {
+                catalogo bean=lista.get(i);
+                //para ocultar botones
+                
+                if (bean.getNombre().equals("")) {
+                  
+                }else{
+                    
+                     btn = new JButton(bean.getNombre());
+                 btn.setBounds(costado, top, ancho, alto);//los primeros indican x al costado y el segundo la parte alta
+                //el tercero es el ancho y ultimo el alto
+                 String img="";
+                if (bean.getImagen().equalsIgnoreCase("")) {
+                       img = new File(".").getAbsolutePath() + "/imagenesCatalogo/carro.PNG";
+                }else{
+                       img = new File(".").getAbsolutePath() + bean.getImagen();
+                }
+              
+                ImageIcon icono = new ImageIcon(img);
+
+             
+                btn.setIcon(icono);
+
+               
+                contador++;
+              
+                if (contador ==contador2) {
+                    
+                      costado = 20;
+                      top = top +alto;
+                     contador2+=5;
+                    // valorTop+=1;
+                     ban=true;
+                    
+                     
+                } else {
+                    //es para darles espacio entre cada boton
+                    costado = costado + ancho + 20;
+                }
+               
+               
+                //prueba presiona boton
+                btn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        JButton obj = (JButton) e.getSource();
+                        String nombre = obj.getText();
+                       
+                        variableEstaticas.nombreCatalogo=nombre;
+                        BolsasP1 b= new BolsasP1();
+                        b.setVisible(true);
+                        
+                        
+                        dispose();
+                       
+                    }
+
+                });
+                    
+                     add(btn);
+                jPanel1.add(btn);
+                }
+               
+                
+            }
+        } else {
+
+        }
+
     }
 
     /**
@@ -38,128 +131,20 @@ public class Inicial extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(252, 248, 248));
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plasticos/imgpas/bolsas.png"))); // NOI18N
-        jButton1.setText("BOLSAS");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton2.setText("LOGISTICA");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton3.setText("POLIETILENOS");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plasticos/imgpas/desechable.png"))); // NOI18N
-        jButton4.setText("DESECHABLES");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        jButton5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plasticos/imgpas/limpieza.jpg"))); // NOI18N
-        jButton5.setText("LIMPIEZA");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
-        jButton6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plasticos/imgpas/papel-rollo.jpg"))); // NOI18N
-        jButton6.setText("PAPEL");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-
-        jButton7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plasticos/imgpas/madera.jpg"))); // NOI18N
-        jButton7.setText("MADERA");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-
-        jButton8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plasticos/imgpas/cintas.png"))); // NOI18N
-        jButton8.setText("CINTAS");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
-                .addContainerGap())
+            .addGap(0, 834, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(158, Short.MAX_VALUE))
+            .addGap(0, 494, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -177,66 +162,30 @@ public class Inicial extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    public List<catalogo> obtenerCatalogoPrincipal() {
+        List<catalogo> lista = new ArrayList<catalogo>();
+        conex con = new conex();
+        catalogo bean = null;
+        try {
+            String sql = "select * from catalogo order by nombre";
+            PreparedStatement ps = con.getConnection().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                bean = new catalogo();
+                bean.setIdCatalogo(rs.getString("idCatalogo"));
+                bean.setNombre(rs.getString("nombre"));
+                bean.setImagen(rs.getString("imagen"));
+                lista.add(bean);
+            }
+            ps.close();
+            rs.close();
+            con.desconectar();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error en inicial metodo obtenerCatalogoPrincipal " + e.getMessage());
+        }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        BolsasP1 B1=new BolsasP1();
-        B1.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        DesechablesP1 des1=new DesechablesP1();
-        des1.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
-        CintasP1 cintas1=new CintasP1();
-        cintas1.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton8ActionPerformed
-
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-        
-        HigienicosP1 higienicos1=new HigienicosP1();
-        higienicos1.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-        MaderaP1 higienicos1=new MaderaP1();
-        higienicos1.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        
-        LimpiezaP1 limpieza1=new LimpiezaP1();
-        limpieza1.setVisible(true);
-        dispose();
-        
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        
-        LogisticaP1 logistica=new LogisticaP1();
-        logistica.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        PolietilenoP1 polietileno=new PolietilenoP1();
-        polietileno.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+        return lista;
+    }
 
     /**
      * @param args the command line arguments
@@ -264,6 +213,13 @@ public class Inicial extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Inicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -274,14 +230,6 @@ public class Inicial extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
