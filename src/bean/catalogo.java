@@ -11,7 +11,7 @@ package bean;
  */
 public class catalogo {
     private String idCatalogo;
-    private String nombre;
+    private String nombre; 
     private String imagen;
 
     public String getIdCatalogo() {
