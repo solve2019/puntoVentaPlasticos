@@ -62,13 +62,13 @@ public class Inicial extends javax.swing.JFrame {
                  btn.setBounds(costado, top, ancho, alto);//los primeros indican x al costado y el segundo la parte alta
                 //el tercero es el ancho y ultimo el alto
                  String img="";
-                if (bean.getImagen().equalsIgnoreCase(" ")) {
+               /* if (bean.getImagen().equalsIgnoreCase(" ")) {
                     System.out.println("aquiiiiiiiiiiiii");
                        //img = new File(".").getAbsolutePath() + "/imagenesCatalogo/carro.PNG";
                 }else{
-                       img = new File(".").getAbsolutePath() + bean.getImagen();
-                }
-              
+                     
+                }*/
+                img = new File(".").getAbsolutePath() + bean.getImagen();
                 ImageIcon icono = new ImageIcon(img);
 
              
@@ -225,7 +225,7 @@ public class Inicial extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Inicial().setVisible(true);
+                new Inicial().setVisible(true); 
             }
         });
     }
