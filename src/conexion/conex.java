@@ -28,7 +28,7 @@ public static String caja="";
  public static String ip = "localhost";
  
  
- public static String bd = "bdPlasticos";  
+ public static String bd = "bdplasticos";  
  public static String url = ""; 
    
    Connection conn = null;

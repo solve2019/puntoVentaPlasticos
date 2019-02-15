@@ -48,7 +48,7 @@ public class Inicial extends javax.swing.JFrame {
              int contador2=5;
              int valorTop=6;
             JButton btn;
-            int costado = 20, top = 20, ancho = 250, alto = 80;
+            int costado = 20, top = 20, ancho = 230, alto = 80;
             boolean ban=false;
             for (int i = 0; i < lista.size(); i++) {
                 catalogo bean=lista.get(i);

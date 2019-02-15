@@ -46,8 +46,8 @@ public class BolsasP1 extends javax.swing.JFrame {
     public BolsasP1() {
         setExtendedState(MAXIMIZED_BOTH);
         initComponents();
-        System.out.println("entro " + variableEstaticas.nombreCatalogo);
-        int costado = 20, top = 20, ancho = 250, alto = 80;
+        //System.out.println("entro " + variableEstaticas.nombreCatalogo);
+        int costado = 20, top = 20, ancho = 230, alto = 80;
         boolean ban = false;
 
         List<catalogo> lista = obtenerSubCatalogos();
@@ -185,6 +185,10 @@ public class BolsasP1 extends javax.swing.JFrame {
                                 P2productoscharomesa charo = new P2productoscharomesa();
                                 charo.setVisible(true);
                                 dispose();
+                            } else if (nombre.equalsIgnoreCase("PLASTICO CRISTAL")) {
+                                P2productoscharomesa plas = new P2productoscharomesa();
+                                plas.setVisible(true);
+                                dispose();    
                             } else if (nombre.equalsIgnoreCase("ESCOBAS")) {
                                 P2escoba escoba = new P2escoba();
                                 escoba.setVisible(true);
@@ -337,7 +341,7 @@ public class BolsasP1 extends javax.swing.JFrame {
         try {
             String sql = "select * from subCatalogo where nombreCatalogo=? order by nombre";
             PreparedStatement ps = con.getConnection().prepareStatement(sql);
-            System.out.println("nombre homis " + variableEstaticas.nombreCatalogo);
+           // System.out.println("nombre homis " + variableEstaticas.nombreCatalogo);
             ps.setString(1, variableEstaticas.nombreCatalogo);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

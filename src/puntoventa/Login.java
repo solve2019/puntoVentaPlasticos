@@ -73,7 +73,7 @@ public class Login extends JFrame implements KeyListener{
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Punto de Venta Comenzar Turno v37");
+        setTitle("Punto de Venta Comenzar Turno v38");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(249, 249, 249));

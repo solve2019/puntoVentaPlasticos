@@ -627,7 +627,7 @@ float totales=0;
             float total=preci*(cantinueva);//nuevo precio de la venta            
             
             total=total-((total*descuen)/100);
-            
+            System.out.println("total desc:"+total);
             
             float existenciafisica=obtenexistencia(idproduc+"");
             //int existen=Integer.parseInt(existencias)-cantinueva; //se recalcula la existencia

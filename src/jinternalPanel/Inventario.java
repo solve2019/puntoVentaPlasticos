@@ -581,7 +581,7 @@ private static TableRowSorter<TableModel> sorter;
 
             },
             new String [] {
-                "Fecha", "Producto", "Codigo de Barras", "Cantidad", "Usuario Movimiento", "Tipo Mivimiento"
+                "Fecha", "Producto", "Codigo de Barras", "Cantidad", "Usuario Movimiento", "Tipo Movimiento"
             }
         ));
         jthistorico.setRowHeight(22);

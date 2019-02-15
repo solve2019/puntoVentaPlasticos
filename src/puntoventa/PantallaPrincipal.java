@@ -78,7 +78,9 @@ public class PantallaPrincipal extends javax.swing.JFrame implements KeyListener
      */
     public PantallaPrincipal() {
         initComponents();
+        
         setTitle("Inicio");
+        jMenuItem39.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         String rutaicon="/images/icono.png";        
@@ -547,7 +549,7 @@ public class PantallaPrincipal extends javax.swing.JFrame implements KeyListener
 
         jMenuItem37.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         jMenuItem37.setText("Cargar XML");
-        jMenuItem37.setVisible(true);
+        jMenuItem37.setVisible(false);
         jMenuItem37.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem37ActionPerformed(evt);
@@ -556,7 +558,7 @@ public class PantallaPrincipal extends javax.swing.JFrame implements KeyListener
         jMenu13.add(jMenuItem37);
 
         jMenuItem39.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        jMenuItem39.setVisible(true);
+        jMenuItem39.setVisible(false);
         jMenuItem39.setText("Venta Touch");
         jMenuItem39.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -868,6 +870,7 @@ public class PantallaPrincipal extends javax.swing.JFrame implements KeyListener
         escritorio.removeAll();
         Ventas v1=new Ventas();                
             v1.setResizable(true);
+           variableEstaticas.controlVentas=true;
             v1.setClosable(true);
             escritorio.add(v1);
             v1.show();

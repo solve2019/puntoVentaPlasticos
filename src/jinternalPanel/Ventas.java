@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package jinternalPanel;
 
 import ClasesDAO.Ticket;
@@ -11,6 +10,7 @@ import ClasesDAO.TicketVenta;
 import ClasesDAO.accesoSistema;
 import PosVenta.CargarPosVenta;
 import Utilerias.funciones;
+import bean.producto;
 import com.mysql.jdbc.PreparedStatement;
 import conexion.conex;
 import java.awt.Color;
@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import jdialog.Cobrar_venta;
@@ -46,49 +47,48 @@ import jdialog.ProductoComun;
 import jdialog.SalidasEfectivo;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import plasticos.Inicial;
+import puntoventa.variableEstaticas;
 
 /**
  *
  * @author desarrollo8
  */
-public class Ventas extends javax.swing.JInternalFrame implements KeyListener {       
-   public static String cantidadagranel="0";
-   
+public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
+
+    public static String cantidadagranel = "0";
+
     /**
      * Creates new form Ventasddd
      */
     public Ventas() {
         initComponents();
-        
+
         jtproductos.getColumnModel().getColumn(0).setMaxWidth(0);
         jtproductos.getColumnModel().getColumn(0).setMinWidth(0);
         jtproductos.getColumnModel().getColumn(0).setPreferredWidth(0);
         jtproductos.getColumnModel().getColumn(0).setWidth(0);
-        
+
         /*jtproductos.getColumnModel().getColumn(8).setMaxWidth(0);
         jtproductos.getColumnModel().getColumn(8).setMinWidth(0);
         jtproductos.getColumnModel().getColumn(8).setPreferredWidth(0);
         jtproductos.getColumnModel().getColumn(8).setWidth(0);
-        */
-        
-        
+         */
         jtproductos.getColumnModel().getColumn(1).setMaxWidth(480);
         jtproductos.getColumnModel().getColumn(1).setMinWidth(480);
         jtproductos.getColumnModel().getColumn(1).setPreferredWidth(480);
         jtproductos.getColumnModel().getColumn(1).setWidth(480);
-                       
- 
+
         jtproductos.getColumnModel().getColumn(6).setMaxWidth(0);  //ID
         jtproductos.getColumnModel().getColumn(6).setMinWidth(0);
         jtproductos.getColumnModel().getColumn(6).setPreferredWidth(0);
         jtproductos.getColumnModel().getColumn(6).setWidth(0);
-        
+
         jtproductos.getColumnModel().getColumn(5).setMaxWidth(0); //existencia
         jtproductos.getColumnModel().getColumn(5).setMinWidth(0);
         jtproductos.getColumnModel().getColumn(5).setPreferredWidth(0);
         jtproductos.getColumnModel().getColumn(5).setWidth(0);
-        
-        if(accesoSistema.campostablaventa.equals("1")){            
+
+        if (accesoSistema.campostablaventa.equals("1")) {
             jtproductos.getColumnModel().getColumn(7).setMaxWidth(0);  //descuento
             jtproductos.getColumnModel().getColumn(7).setMinWidth(0);
             jtproductos.getColumnModel().getColumn(7).setPreferredWidth(0);
@@ -98,13 +98,13 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
             jtproductos.getColumnModel().getColumn(8).setMinWidth(0);
             jtproductos.getColumnModel().getColumn(8).setPreferredWidth(0);
             jtproductos.getColumnModel().getColumn(8).setWidth(0);
-        }   
-            jtproductos.getColumnModel().getColumn(8).setMaxWidth(0); //ieps
-            jtproductos.getColumnModel().getColumn(8).setMinWidth(0);
-            jtproductos.getColumnModel().getColumn(8).setPreferredWidth(0);
-            jtproductos.getColumnModel().getColumn(8).setWidth(0);
-        
-        if(accesoSistema.menufarmacia.equals("0")){            
+        }
+        jtproductos.getColumnModel().getColumn(8).setMaxWidth(0); //ieps
+        jtproductos.getColumnModel().getColumn(8).setMinWidth(0);
+        jtproductos.getColumnModel().getColumn(8).setPreferredWidth(0);
+        jtproductos.getColumnModel().getColumn(8).setWidth(0);
+
+        if (accesoSistema.menufarmacia.equals("0")) {
             jtproductos.getColumnModel().getColumn(9).setMaxWidth(0);  //antibiotico
             jtproductos.getColumnModel().getColumn(9).setMinWidth(0);
             jtproductos.getColumnModel().getColumn(9).setPreferredWidth(0);
@@ -114,18 +114,69 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
             jtproductos.getColumnModel().getColumn(10).setMinWidth(0);
             jtproductos.getColumnModel().getColumn(10).setPreferredWidth(0);
             jtproductos.getColumnModel().getColumn(10).setWidth(0);
-        }  
-        
-        
-        
-        
+        }
+
         cargar_clientes();
         AutoCompleteDecorator.decorate(this.jccliente);
-        if(accesoSistema.menufarmacia.equals("0")){
+        if (accesoSistema.menufarmacia.equals("0")) {
             jpfarmacia.setVisible(false);
         }
-        
+
         txtproducto.requestFocus();
+      
+         JTable tabla = variableEstaticas.tabla;
+  
+        if (tabla.getRowCount() > 0) {
+            float total = 0;
+            float totalPro=0;
+            DefaultTableModel modelo = (DefaultTableModel) jtproductos.getModel();
+            for (int i = 0; i < tabla.getRowCount(); i++) {
+                String codigoBarras = tabla.getValueAt(i, 0) + "";
+                String des = tabla.getValueAt(i, 1) + "";
+                String precio = tabla.getValueAt(i, 2) + "";
+                String cantidad = tabla.getValueAt(i, 3) + "";
+                String importe = tabla.getValueAt(i, 4) + "";
+                String existencia = tabla.getValueAt(i, 5) + "";
+                String id = tabla.getValueAt(i, 6) + "";
+                String descuento = tabla.getValueAt(i, 7) + "";
+                String ieps = tabla.getValueAt(i, 8) + "";
+                
+                String antibiotico = tabla.getValueAt(i, 9) + "";
+                String lote = tabla.getValueAt(i, 10) + "";
+               
+                
+                if (antibiotico.equals("null")) {
+                    antibiotico="0";
+                    System.out.println("entro 222");
+                }else{
+                    
+                }
+                
+                
+                if (lote.equals("null")) {
+                    lote="0";
+                }else{
+                    
+                }
+                
+                 System.out.println("lote "  + lote);
+                System.out.println("antibiotico  " +antibiotico);
+                total += Float.parseFloat(importe);
+               
+                totalPro+=Float.parseFloat(cantidad);
+                modelo.addRow(new Object[]{codigoBarras, des, precio, cantidad, importe, existencia, id, descuento, ieps, antibiotico, lote});
+                
+            }
+            System.out.println("cliente  "+variableEstaticas.cliente);
+            jccliente.setSelectedItem(variableEstaticas.cliente);
+            jltotal.setText("Total Productos: " + totalPro + " Filas: " + tabla.getRowCount());
+            jlmonto.setText(total + "");
+            jlgrantotal.setText(total + "");
+            JOptionPane.showMessageDialog(null, "Verifica el nombre de tu cliente");
+
+        } else {
+
+        }
     }
 
     /**
@@ -153,7 +204,7 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
         jButton5 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
-        jccliente = new javax.swing.JComboBox<>();
+        jccliente = new javax.swing.JComboBox<String>();
         jLabel2 = new javax.swing.JLabel();
         jlfoto = new javax.swing.JLabel();
         txtcanti = new javax.swing.JTextField();
@@ -190,6 +241,24 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
         setMaximizable(true);
         setResizable(true);
         setTitle("PUNTO DE VENTA");
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosed(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosing(evt);
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(245, 244, 244));
 
@@ -341,7 +410,12 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
         );
 
         jccliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jccliente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona.." }));
+        jccliente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecciona.." }));
+        jccliente.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcclienteItemStateChanged(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 15)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 51, 204));
@@ -582,43 +656,44 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        if(!txtproducto.getText().trim().equals("")){
-            cargar_producto(txtproducto.getText().trim(),"CB");
+        if (!txtproducto.getText().trim().equals("")) {
+            cargar_producto(txtproducto.getText().trim(), "CB");
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtproductoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtproductoKeyPressed
         // TODO add your handling code here:
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){ 
-            if(!txtproducto.getText().trim().equals("")){
-                cargar_producto(txtproducto.getText().trim(),"CB");
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (!txtproducto.getText().trim().equals("")) {
+                cargar_producto(txtproducto.getText().trim(), "CB");
+                  System.out.println("jtproductos " + jtproductos.getRowCount());
+                 //variableEstaticas.tabla=jtproductos;
             }
         }
     }//GEN-LAST:event_txtproductoKeyPressed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        
-        
-         DefaultTableModel modelo=(DefaultTableModel) jtproductos.getModel();  
-          int fila=-1;
-          fila=jtproductos.getSelectedRow();
-          if(fila!=-1){
-              //int opc=JOptionPane.showConfirmDialog(null, "¿Estas seguro de eliminar?","Alerta",JOptionPane.INFORMATION_MESSAGE);
-              //if(opc==JOptionPane.OK_OPTION){
-                modelo.removeRow(fila);                
-                //for(int i=fila; i<jtproductos.getRowCount(); i++){
-                //    jtproductos.setValueAt(""+(i+1), i, 0);
-                //}
-              //}  
-              
-          }else{
-            JOptionPane.showMessageDialog(null, "Seleccionar un producto de la tabla.","Alerta",JOptionPane.ERROR_MESSAGE);
-         }
-         cargar_informacion();
-         
-         ponerfocoenventa();
+
+        DefaultTableModel modelo = (DefaultTableModel) jtproductos.getModel();
+        int fila = -1;
+        fila = jtproductos.getSelectedRow();
+        if (fila != -1) {
+            //int opc=JOptionPane.showConfirmDialog(null, "¿Estas seguro de eliminar?","Alerta",JOptionPane.INFORMATION_MESSAGE);
+            //if(opc==JOptionPane.OK_OPTION){
+            modelo.removeRow(fila);
+            //for(int i=fila; i<jtproductos.getRowCount(); i++){
+            //    jtproductos.setValueAt(""+(i+1), i, 0);
+            //}
+            //}  
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccionar un producto de la tabla.", "Alerta", JOptionPane.ERROR_MESSAGE);
+        }
+        cargar_informacion();
+
+        ponerfocoenventa();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -626,8 +701,16 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
         vaciartabla();
         cargar_informacion();
         ponerfocoenventa();
+         vaciartablaEstatica(variableEstaticas.tabla);
     }//GEN-LAST:event_jButton9ActionPerformed
+ public static void vaciartablaEstatica(JTable jtproductos1 ) {
+        DefaultTableModel modelo = (DefaultTableModel) jtproductos1.getModel();
+        for (int i = 0; i < jtproductos1.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i -= 1;
+        }
 
+    }
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         Frame f = JOptionPane.getFrameForComponent(this);
@@ -641,88 +724,86 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
         cargar_informacion();
-        cargar_informacion();
+        //cargar_informacion();
         cobrar_venta();
-        
-        
+vaciartablaEstatica(variableEstaticas.tabla);
+
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:        
-        String folio="0";
+        String folio = "0";
         conex cn = new conex();
-	String sql="SELECT parametro from to_parametros where clave='FOLIO'";
-	System.out.println(sql);
-	PreparedStatement pstm100;
-	try {
-		pstm100 = (PreparedStatement) cn.getConnection().prepareStatement(sql);
-		ResultSet rs100 = (ResultSet) pstm100.executeQuery();
-	    while (rs100.next()) {	    	
-	    	folio=rs100.getString("parametro");	    		    			   
-		}
-	    rs100.close();
+        String sql = "SELECT parametro from to_parametros where clave='FOLIO'";
+        System.out.println(sql);
+        PreparedStatement pstm100;
+        try {
+            pstm100 = (PreparedStatement) cn.getConnection().prepareStatement(sql);
+            ResultSet rs100 = (ResultSet) pstm100.executeQuery();
+            while (rs100.next()) {
+                folio = rs100.getString("parametro");
+            }
+            rs100.close();
             pstm100.close();
             cn.desconectar();
-	} catch (SQLException e2) {
-		// TODO Auto-generated catch block
-		e2.printStackTrace();
-	}
-        int folios=Integer.parseInt(folio);
-        folios=folios-1;
-        
+        } catch (SQLException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
+        int folios = Integer.parseInt(folio);
+        folios = folios - 1;
+
         //Ticket imprime=new Ticket();
         //imprime.ReImprimirDocumento(folio);
-        
-        TicketVenta ticketpdf=new TicketVenta();
-        ticketpdf.imprimirticket(folio+"","IMPPVT");
+        TicketVenta ticketpdf = new TicketVenta();
+        ticketpdf.imprimirticket(folio + "", "IMPPVT");
         ponerfocoenventa();
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
         Frame f = JOptionPane.getFrameForComponent(this);
-        ReporteDiarioVentasDevoluciones reportediario=new ReporteDiarioVentasDevoluciones(f,true);
+        ReporteDiarioVentasDevoluciones reportediario = new ReporteDiarioVentasDevoluciones(f, true);
         reportediario.show();
-       
-        
-        
+
+
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jtproductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtproductosMouseClicked
         // TODO add your handling code here:
-          if (evt.getClickCount() == 1) {
-               String id=jtproductos.getValueAt(jtproductos.getSelectedRow(), 6).toString();
-                funciones obtenimagen=new funciones();
-                Image foto=obtenimagen.obtenImagenes("SELECT imagen FROM tc_productos where idproducto="+id);
-                System.out.println("foto: "+foto);
-                if(foto==null){
-                    jlfoto.setText("");
-                    jlfoto.setIcon(null);
-                    jPanel1.updateUI();
-                }else{
-                    ImageIcon icon = new ImageIcon(foto.getScaledInstance(jlfoto.getWidth(), jlfoto.getHeight(), Image.SCALE_DEFAULT));
-                    jlfoto.setText("");
-                    jlfoto.setIcon(icon);
-                    jPanel1.updateUI();
-                }
-          }
-         if (evt.getClickCount() == 2) {
-             String producto=jtproductos.getValueAt(jtproductos.getSelectedRow(), 1).toString();
-             String precio=jtproductos.getValueAt(jtproductos.getSelectedRow(), 2).toString();
-             String cantidad=jtproductos.getValueAt(jtproductos.getSelectedRow(), 3).toString();             
-             String total=jtproductos.getValueAt(jtproductos.getSelectedRow(), 4).toString();  
-             String existencia=jtproductos.getValueAt(jtproductos.getSelectedRow(), 5).toString();
-             String idprod=jtproductos.getValueAt(jtproductos.getSelectedRow(), 6).toString();
-             String descuento=jtproductos.getValueAt(jtproductos.getSelectedRow(), 7).toString();
-             boolean val=validaragranel(idprod);
-             if(val==false){
-                int fila=jtproductos.getSelectedRow();
+        if (evt.getClickCount() == 1) {
+            String id = jtproductos.getValueAt(jtproductos.getSelectedRow(), 6).toString();
+            funciones obtenimagen = new funciones();
+            Image foto = obtenimagen.obtenImagenes("SELECT imagen FROM tc_productos where idproducto=" + id);
+            System.out.println("foto: " + foto);
+            if (foto == null) {
+                jlfoto.setText("");
+                jlfoto.setIcon(null);
+                jPanel1.updateUI();
+            } else {
+                ImageIcon icon = new ImageIcon(foto.getScaledInstance(jlfoto.getWidth(), jlfoto.getHeight(), Image.SCALE_DEFAULT));
+                jlfoto.setText("");
+                jlfoto.setIcon(icon);
+                jPanel1.updateUI();
+            }
+        }
+        if (evt.getClickCount() == 2) {
+            String producto = jtproductos.getValueAt(jtproductos.getSelectedRow(), 1).toString();
+            String precio = jtproductos.getValueAt(jtproductos.getSelectedRow(), 2).toString();
+            String cantidad = jtproductos.getValueAt(jtproductos.getSelectedRow(), 3).toString();
+            String total = jtproductos.getValueAt(jtproductos.getSelectedRow(), 4).toString();
+            String existencia = jtproductos.getValueAt(jtproductos.getSelectedRow(), 5).toString();
+            String idprod = jtproductos.getValueAt(jtproductos.getSelectedRow(), 6).toString();
+            String descuento = jtproductos.getValueAt(jtproductos.getSelectedRow(), 7).toString();
+            boolean val = validaragranel(idprod);
+            if (val == false) {
+                int fila = jtproductos.getSelectedRow();
                 Frame f = JOptionPane.getFrameForComponent(this);
-                EditarCantidad dialog = new EditarCantidad(f,true,fila,producto,cantidad,precio,existencia,idprod,total,descuento);
+                EditarCantidad dialog = new EditarCantidad(f, true, fila, producto, cantidad, precio, existencia, idprod, total, descuento);
                 dialog.show();
-             }
-         }
-        
+            }
+        }
+
     }//GEN-LAST:event_jtproductosMouseClicked
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -762,783 +843,862 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
         // TODO add your handling code here:
         int key = evt.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
-                String precio=jtproductos.getValueAt(jtproductos.getSelectedRow(), 2).toString();
-                String cantidad=jtproductos.getValueAt(jtproductos.getSelectedRow(), 3).toString();
-                String id=jtproductos.getValueAt(jtproductos.getSelectedRow(), 6).toString();
-                Float costototal=Float.parseFloat(precio)*Float.parseFloat(cantidad);
-                funciones redondear=new funciones();
-                double imp=redondear.redondearDecimales(costototal, 2);
-                System.out.println("enter: "+imp);
-                jtproductos.setValueAt(imp+"", jtproductos.getSelectedRow(), 4);
-                cargar_informacion();
-                txtproducto.requestFocus();                                  
+            String precio = jtproductos.getValueAt(jtproductos.getSelectedRow(), 2).toString();
+            String cantidad = jtproductos.getValueAt(jtproductos.getSelectedRow(), 3).toString();
+            String id = jtproductos.getValueAt(jtproductos.getSelectedRow(), 6).toString();
+            Float costototal = Float.parseFloat(precio) * Float.parseFloat(cantidad);
+            funciones redondear = new funciones();
+            double imp = redondear.redondearDecimales(costototal, 2);
+            System.out.println("enter: " + imp);
+            jtproductos.setValueAt(imp + "", jtproductos.getSelectedRow(), 4);
+            cargar_informacion();
+            txtproducto.requestFocus();
         }
     }//GEN-LAST:event_jtproductosKeyPressed
 
     private void txtcantiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcantiKeyPressed
         // TODO add your handling code here:
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER) { 
-            txtproducto.requestFocus(); 
-         }  
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txtproducto.requestFocus();
+        }
     }//GEN-LAST:event_txtcantiKeyPressed
 
     private void txtcantiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcantiKeyTyped
         // TODO add your handling code here:
-        if(txtcanti.getText().trim().length()>=4){            
+        if (txtcanti.getText().trim().length() >= 4) {
             evt.consume(); // ignorar el evento de teclado
-        }else{
-            if (((evt.getKeyChar() < '0') || (evt.getKeyChar() > '9'))){
-               evt.consume(); // ignorar el evento de teclado
-            }            
-        }        
+        } else {
+            if (((evt.getKeyChar() < '0') || (evt.getKeyChar() > '9'))) {
+                evt.consume(); // ignorar el evento de teclado
+            }
+        }
     }//GEN-LAST:event_txtcantiKeyTyped
 
-     public static void vaciartabla(){
-        DefaultTableModel modelo=(DefaultTableModel) jtproductos.getModel();         
-            for (int i = 0; i < jtproductos.getRowCount(); i++) {
-                modelo.removeRow(i);
-                i-=1;
-            }    
-           
-    }  
-    public static void cargar_producto(String producto_code,String tipobusqueda){
-        DefaultTableModel modelo=(DefaultTableModel) jtproductos.getModel();          
-        String codigo_barras=producto_code;
-        conex con=new conex();          
-        ResultSet rs = null;   
-        String myQuery="";
-        if(tipobusqueda.equals("CB")){
-            myQuery = "SELECT * FROM tc_productos WHERE codigo_barras='"+codigo_barras+"' and estatus=1";
+    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
+        JOptionPane.showMessageDialog(null, "cerradome");
+    }//GEN-LAST:event_formInternalFrameClosing
+
+    private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
+        JOptionPane.showMessageDialog(null, "cerradome2");
+    }//GEN-LAST:event_formInternalFrameClosed
+
+    private void jcclienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcclienteItemStateChanged
+      
+       
+    }//GEN-LAST:event_jcclienteItemStateChanged
+
+    public static void vaciartabla() {
+        DefaultTableModel modelo = (DefaultTableModel) jtproductos.getModel();
+        for (int i = 0; i < jtproductos.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i -= 1;
         }
-        if(tipobusqueda.equals("ID")){
-            myQuery = "SELECT * FROM tc_productos WHERE idproducto='"+codigo_barras+"' and estatus=1"; //el estatus es producto comun
-        }        
+
+    }
+
+    public static void cargar_producto(String producto_code, String tipobusqueda) {
+        //ya esta
+        DefaultTableModel modelo = (DefaultTableModel) jtproductos.getModel();
+        String codigo_barras = producto_code;
+        conex con = new conex();
+        producto bean = new producto();
+        ResultSet rs = null;
+        String myQuery = "";
+         float precio = 0, preciomayoreo = 0;
+            float preciopromo = 0;
+            int cantidadpromo = 0;
+            int cantimayoreo = 0;
+            double ieps = 0;
+            String codigobarra = "", producto = "";
+            int existencia = 0;
+            String id = "";
+            String cantidadini="";
+            boolean existe = false;
+            float importe=0;
+            String agranel = "";
+        if (tipobusqueda.equals("CB")) {
+            myQuery = "SELECT * FROM tc_productos WHERE codigo_barras='" + codigo_barras + "' and estatus=1";
+        }
+        if (tipobusqueda.equals("ID")) {
+            myQuery = "SELECT * FROM tc_productos WHERE idproducto='" + codigo_barras + "' and estatus=1"; //el estatus es producto comun
+        }
         //System.out.println(""+myQuery);
-        try {  
+        try {
             Statement st = con.getConnection().createStatement();
             rs = st.executeQuery(myQuery);
-            float precio=0,preciomayoreo=0;
-            float preciopromo=0;
-            int cantidadpromo=0;
-            int cantimayoreo=0;
-            double ieps=0;
-            String codigobarra="",producto="";
-            int existencia=0;
-            String id="";
-            boolean existe=false;
-            String agranel="";
-            if(rs.next()) {                 
-                precio=rs.getFloat("precio_venta");
-                codigobarra=rs.getString("codigo_barras");
-                producto=rs.getString("nombre_producto");
-                existencia=rs.getInt("existencia");
-                id=rs.getString("idproducto");
-                preciomayoreo=rs.getFloat("precio_mayoreo");
-                cantimayoreo=rs.getInt("cantidad_mayoreo");
-                preciopromo=rs.getFloat("precio_promocion");
-                cantidadpromo=rs.getInt("cantidad_promocion");
-                agranel=rs.getString("agranel");
-                ieps=rs.getDouble("ieps");
-                existe=true;
-                if(cantimayoreo==0){
-                    cantimayoreo=10000;
+           
+            if (rs.next()) {
+                precio = rs.getFloat("precio_venta");
+                codigobarra = rs.getString("codigo_barras");
+                producto = rs.getString("nombre_producto");
+                existencia = rs.getInt("existencia");
+                id = rs.getString("idproducto");
+                preciomayoreo = rs.getFloat("precio_mayoreo");
+                cantimayoreo = rs.getInt("cantidad_mayoreo");
+                preciopromo = rs.getFloat("precio_promocion");
+                cantidadpromo = rs.getInt("cantidad_promocion");
+                agranel = rs.getString("agranel");
+                ieps = rs.getDouble("ieps");
+                existe = true;
+               
+
+                if (cantimayoreo == 0) {
+                    cantimayoreo = 10000;
                 }
-                
-                funciones obtenimagen=new funciones();
-                Image foto=obtenimagen.obtenImagenes("SELECT imagen FROM tc_productos where idproducto="+id);
-                System.out.println("foto: "+foto);
-                if(foto==null){
+
+                funciones obtenimagen = new funciones();
+                Image foto = obtenimagen.obtenImagenes("SELECT imagen FROM tc_productos where idproducto=" + id);
+                System.out.println("foto: " + foto);
+                if (foto == null) {
                     jlfoto.setText("");
                     jlfoto.setIcon(null);
                     jPanel1.updateUI();
-                }else{
+                } else {
                     ImageIcon icon = new ImageIcon(foto.getScaledInstance(jlfoto.getWidth(), jlfoto.getHeight(), Image.SCALE_DEFAULT));
                     jlfoto.setText("");
                     jlfoto.setIcon(icon);
                     jPanel1.updateUI();
                 }
-                
+
                 //modelo.addRow(new Object[]{rs.getString("codigo_barras"),rs.getString("nombre_producto"),rs.getString("precio_venta"),"1","10",rs.getString("existencia")});
             }
-           
-            rs.close(); 
+
+            rs.close();
             st.close();
-            con.desconectar();   
-            
-            if(existencia<=0){
+            con.desconectar();
+
+            if (existencia <= 0) {
                 //existe=false;
                 //JOptionPane.showMessageDialog(null, "No cuenta con existencia de este producto.", "Sin existencia.", JOptionPane.ERROR_MESSAGE);
             }
-            
-            if(existe){
+
+            if (existe) {
                 //String cantidadini="1";
-                String cantidadini=txtcanti.getText().trim();
-                float importe=precio*Float.parseFloat(cantidadini);
-                if(agranel.equals("SI")){                                
-                        Frame f = JOptionPane.getFrameForComponent(null);
-                        Agranel agran=new Agranel(f,true,producto,precio+"");
-                        agran.show();
-                        cantidadini=cantidadagranel; 
-                        importe=precio*Float.parseFloat(cantidadini);                        
-                        funciones redondear=new funciones();
-                        double imp=redondear.redondearDecimales(importe, 2);
-                        importe=(float) imp;
+                 cantidadini = txtcanti.getText().trim();
+                 importe = precio * Float.parseFloat(cantidadini);
+                bean.setImporte(importe + "");
+                if (agranel.equals("SI")) {
+                    Frame f = JOptionPane.getFrameForComponent(null);
+                    Agranel agran = new Agranel(f, true, producto, precio + "");
+                    agran.show();
+                    cantidadini = cantidadagranel;
+                    importe = precio * Float.parseFloat(cantidadini);
+                    funciones redondear = new funciones();
+                    double imp = redondear.redondearDecimales(importe, 2);
+                    importe = (float) imp;
                 }
-                boolean existe_tabla_temp=false;
-                for(int fila=0; fila<jtproductos.getRowCount(); fila++){
-                    String barcode=jtproductos.getValueAt(fila, 0).toString().trim();                 
-                    float precio_unitario=Float.parseFloat(jtproductos.getValueAt(fila, 2).toString().trim());
-                    float cantidad=Float.parseFloat(jtproductos.getValueAt(fila, 3).toString().trim());                             
-                    float existencia_total=Float.parseFloat(jtproductos.getValueAt(fila, 5).toString().trim());
-                    String id_prod=jtproductos.getValueAt(fila, 6).toString().trim();                 
-                    if(id_prod.equals(id)){         
-                    //if(barcode.equals(codigobarra)){
-                        if(agranel.equals("SI")){
+                boolean existe_tabla_temp = false;
+                for (int fila = 0; fila < jtproductos.getRowCount(); fila++) {
+                    String barcode = jtproductos.getValueAt(fila, 0).toString().trim();
+                    float precio_unitario = Float.parseFloat(jtproductos.getValueAt(fila, 2).toString().trim());
+                    float cantidad = Float.parseFloat(jtproductos.getValueAt(fila, 3).toString().trim());
+                    float existencia_total = Float.parseFloat(jtproductos.getValueAt(fila, 5).toString().trim());
+                    String id_prod = jtproductos.getValueAt(fila, 6).toString().trim();
+                    if (id_prod.equals(id)) {
+                        //if(barcode.equals(codigobarra)){
+                        if (agranel.equals("SI")) {
                             //cantidad=Float.parseFloat(cantidadagranel);        //pone lacantidad que ingresa                                           
-                            cantidad=cantidad+Float.parseFloat(cantidadagranel);   //suma loque ya se tiene                                                
-                        }else{
+                            cantidad = cantidad + Float.parseFloat(cantidadagranel);   //suma loque ya se tiene                                                
+                        } else {
                             //String txtcantiini="1";
-                            String txtcantiini=txtcanti.getText().trim();
-                            if(txtcanti.getText().trim().equals("")){
-                                cantidad++;                             
-                            }else{
-                               cantidad=cantidad+Integer.parseInt(txtcanti.getText().trim());
+                            String txtcantiini = txtcanti.getText().trim();
+                            if (txtcanti.getText().trim().equals("")) {
+                                cantidad++;
+                            } else {
+                                cantidad = cantidad + Integer.parseInt(txtcanti.getText().trim());
                             }
-                            
+
                         }
-                        System.out.println(cantidad+">="+cantimayoreo);
-                        if(cantidad>=cantimayoreo){
-                            precio_unitario=preciomayoreo;
-                            importe=precio_unitario*Float.parseFloat(cantidadini);
+                        System.out.println(cantidad + ">=" + cantimayoreo);
+                        if (cantidad >= cantimayoreo) {
+                            precio_unitario = preciomayoreo;
+                            importe = precio_unitario * Float.parseFloat(cantidadini);
                         }
                         //PROMOCION
-                        System.out.println(""+cantidadpromo+"!=0 && "+cantidad+">="+cantidadpromo);
-                        if(cantidadpromo!=0 && cantidad>=cantidadpromo){
+                        System.out.println("" + cantidadpromo + "!=0 && " + cantidad + ">=" + cantidadpromo);
+                        if (cantidadpromo != 0 && cantidad >= cantidadpromo) {
                             int response = JOptionPane.showConfirmDialog(null, "Este producto tiene promocion desea aplicar?", "Confirmar",
-                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                             if (response == JOptionPane.YES_OPTION) {
-                                 System.out.println("PRECIO PROMO");
-                                 precio_unitario=preciopromo;
-                            } 
+                                System.out.println("PRECIO PROMO");
+                                precio_unitario = preciopromo;
+                            }
                         }
                         //FIN PROMO
-                        
-                        funciones redondear2=new funciones();                  
-                        ieps=precio_unitario*ieps;
-                        ieps=redondear2.redondearDecimales(ieps, 2);     
-                        ieps=ieps*cantidad;
-                        ieps=redondear2.redondearDecimales(ieps, 2);     
-                                
-                        jtproductos.setValueAt(precio_unitario, fila, 2); 
-                        
-                        float total_final=precio_unitario*cantidad;  
-                        funciones redondear=new funciones();
-                        double totl=redondear.redondearDecimales(total_final, 2);
-                        total_final=(float) totl;
-                        if(agranel.equals("SI")){
-                            existencia_total=existencia_total-Float.parseFloat(cantidadagranel);
-                        }else{
-                            existencia_total=existencia_total-1;
+
+                        funciones redondear2 = new funciones();
+                        ieps = precio_unitario * ieps;
+                        ieps = redondear2.redondearDecimales(ieps, 2);
+                        ieps = ieps * cantidad;
+                        ieps = redondear2.redondearDecimales(ieps, 2);
+
+                        jtproductos.setValueAt(precio_unitario, fila, 2);
+
+                        float total_final = precio_unitario * cantidad;
+                        funciones redondear = new funciones();
+                        double totl = redondear.redondearDecimales(total_final, 2);
+                        total_final = (float) totl;
+                        if (agranel.equals("SI")) {
+                            existencia_total = existencia_total - Float.parseFloat(cantidadagranel);
+                        } else {
+                            existencia_total = existencia_total - 1;
                         }
-                        jtproductos.setValueAt(cantidad, fila, 3); 
-                        jtproductos.setValueAt(total_final, fila, 4);   
-                        jtproductos.setValueAt(existencia_total, fila, 5);  
-                        jtproductos.setValueAt(ieps+"", fila, 8);  
+                        jtproductos.setValueAt(cantidad, fila, 3);
+                        jtproductos.setValueAt(total_final, fila, 4);
+                        jtproductos.setValueAt(existencia_total, fila, 5);
+                        jtproductos.setValueAt(ieps + "", fila, 8);
                         System.out.println("MAS DE UN REGISTRO PERO YA ESTA EN TABLA");
-                        existe_tabla_temp=true;
+                        existe_tabla_temp = true;
                         jtproductos.changeSelection(fila, 1, false, false);
                     }/*else{//es nuevo y se agrega    
                        System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
                        modelo.addRow(new Object[]{codigobarra,producto,precio+"","1",precio+"",existencia-1});
-                    }*/                 
+                    }*/
                 }
 
-                if(existe_tabla_temp==false && jtproductos.getRowCount()>0){
-                   
-                    
-                        System.out.println(""+cantidadpromo+"!=0 && "+1+">="+cantidadpromo);
-                        if(cantidadpromo!=0 && 1>=cantidadpromo){
-                            int response = JOptionPane.showConfirmDialog(null, "Este producto tiene promocion desea aplicar?", "Confirmar",
-                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                            if (response == JOptionPane.YES_OPTION) {
-                                 System.out.println("PRECIO PROMO");
-                                 precio=preciopromo;
-                                 importe=precio;
-                            } 
-                       }
-                    
-                        funciones redondear=new funciones();                  
-                        ieps=precio*ieps;
-                        ieps=redondear.redondearDecimales(ieps, 2);     
-                        
-                       System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
-                     
-                       
-                       System.out.println("cantidadini1: "+cantidadini);
-                        //if(txtcanti.getText().trim().equals("")){ //cantidad inicial del texbox                               
-                        //}else{
-                        //       cantidadini=txtcanti.getText().trim();
-                        //}
-                        
-                        System.out.println(Float.parseFloat(cantidadini)+">="+cantimayoreo);
-                        if(Float.parseFloat(cantidadini)>=cantimayoreo){
-                                precio=preciomayoreo;                            
-                                importe=preciomayoreo*Float.parseFloat(cantidadini);
-                                System.out.println("preciomayoreo:"+preciomayoreo+" "+cantidadini);
-                                
-                        }
-                       System.out.println("importe:"+importe);
-                       modelo.addRow(new Object[]{codigobarra,producto,precio+"",cantidadini+"",importe+"",existencia-1,id,"0",ieps+""});
-                       jtproductos.changeSelection(jtproductos.getRowCount() - 1, 1, false, false);
-                }
-                
-                if(jtproductos.getRowCount()<=0){//es el primer registro
-                    System.out.println(""+cantidadpromo+"!=0 && "+1+">="+cantidadpromo);
-                    System.out.println("cantidadini1: "+cantidadini);
-                    if(Float.parseFloat(cantidadini)>=cantimayoreo){
-                            precio=preciomayoreo;
-                    }
-                    
-                    if(cantidadpromo!=0 && 1>=cantidadpromo){
+                if (existe_tabla_temp == false && jtproductos.getRowCount() > 0) {
+
+                    System.out.println("" + cantidadpromo + "!=0 && " + 1 + ">=" + cantidadpromo);
+                    if (cantidadpromo != 0 && 1 >= cantidadpromo) {
                         int response = JOptionPane.showConfirmDialog(null, "Este producto tiene promocion desea aplicar?", "Confirmar",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                         if (response == JOptionPane.YES_OPTION) {
-                             System.out.println("PRECIO PROMO");
-                             precio=preciopromo;
-                             importe=precio;
-                        } 
-                   }
-                   funciones redondear=new funciones();                  
-                   ieps=precio*ieps;
-                   ieps=redondear.redondearDecimales(ieps, 2);                   
-                   
-                    System.out.println(Float.parseFloat(cantidadini)+">="+cantimayoreo);
-                    if(Float.parseFloat(cantidadini)>=cantimayoreo){                            
-                            importe=preciomayoreo*Float.parseFloat(cantidadini);
+                            System.out.println("PRECIO PROMO");
+                            precio = preciopromo;
+                            importe = precio;
+                        }
                     }
-                   
-                   System.out.println("PRIMER REGISTRO");
-                   
-                   System.out.println("cantidadini3: "+cantidadini);                   
-                   //if(txtcanti.getText().trim().equals("")){ //cantidad inicial del texbox                               
-                   //}else{
-                   //       cantidadini=txtcanti.getText().trim();
-                   //}
-                    System.out.println("importe: "+importe);
-                    System.out.println(""+cantidadini);
-                   modelo.addRow(new Object[]{codigobarra,producto,precio+"",cantidadini+"",importe+"",existencia-1,id,"0",ieps+""});
-                   jtproductos.changeSelection(jtproductos.getRowCount() - 1, 1, false, false);
+
+                    funciones redondear = new funciones();
+                    ieps = precio * ieps;
+                    ieps = redondear.redondearDecimales(ieps, 2);
+
+                    System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
+
+                    System.out.println("cantidadini1: " + cantidadini);
+                    //if(txtcanti.getText().trim().equals("")){ //cantidad inicial del texbox                               
+                    //}else{
+                    //       cantidadini=txtcanti.getText().trim();
+                    //}
+
+                    System.out.println(Float.parseFloat(cantidadini) + ">=" + cantimayoreo);
+                    if (Float.parseFloat(cantidadini) >= cantimayoreo) {
+                        precio = preciomayoreo;
+                        importe = preciomayoreo * Float.parseFloat(cantidadini);
+                        System.out.println("preciomayoreo:" + preciomayoreo + " " + cantidadini);
+
+                    }
+                    System.out.println("importe:" + importe);
+                    //yo mero
+                    modelo.addRow(new Object[]{codigobarra, producto, precio + "", cantidadini + "",
+                        importe + "", existencia - 1, id, "0", ieps + ""});
+
+                    jtproductos.changeSelection(jtproductos.getRowCount() - 1, 1, false, false);
                 }
-            }else{
-                
-                conex conlocal=new conex();                   
-                ResultSet rs2 = null;                
-                int total=0;
+
+                if (jtproductos.getRowCount() <= 0) {//es el primer registro
+                    System.out.println("" + cantidadpromo + "!=0 && " + 1 + ">=" + cantidadpromo);
+                    System.out.println("cantidadini1: " + cantidadini);
+                    if (Float.parseFloat(cantidadini) >= cantimayoreo) {
+                        precio = preciomayoreo;
+                    }
+
+                    if (cantidadpromo != 0 && 1 >= cantidadpromo) {
+                        int response = JOptionPane.showConfirmDialog(null, "Este producto tiene promocion desea aplicar?", "Confirmar",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                        if (response == JOptionPane.YES_OPTION) {
+                            System.out.println("PRECIO PROMO");
+                            precio = preciopromo;
+                            importe = precio;
+                        }
+                    }
+                    funciones redondear = new funciones();
+                    ieps = precio * ieps;
+                    ieps = redondear.redondearDecimales(ieps, 2);
+
+                    System.out.println(Float.parseFloat(cantidadini) + ">=" + cantimayoreo);
+                    if (Float.parseFloat(cantidadini) >= cantimayoreo) {
+                        importe = preciomayoreo * Float.parseFloat(cantidadini);
+                    }
+
+                    System.out.println("PRIMER REGISTRO");
+
+                    System.out.println("cantidadini3: " + cantidadini);
+                    //if(txtcanti.getText().trim().equals("")){ //cantidad inicial del texbox                               
+                    //}else{
+                    //       cantidadini=txtcanti.getText().trim();
+                    //}
+                    System.out.println("importe: " + importe);
+                    System.out.println("" + cantidadini);
+                    modelo.addRow(new Object[]{codigobarra, producto, precio + "", cantidadini + "", importe + "", existencia - 1, id, "0", ieps + ""});
+                    jtproductos.changeSelection(jtproductos.getRowCount() - 1, 1, false, false);
+                }
+            } else {
+
+                conex conlocal = new conex();
+                ResultSet rs2 = null;
+                int total = 0;
                 try {
                     Statement st2 = conlocal.getConnection().createStatement();
-                    String consul="select count(idproducto) as total from tc_productos where estatus=1 and (nombre_producto like '%"+producto_code+"%' or codigo_barras like '%"+producto_code+"%')";
-                    System.out.println(""+consul);
-                    rs2 = st2.executeQuery(consul);                    
-                    if(rs2.next()) {                     
-                    total=rs2.getInt("total");
+                    String consul = "select count(idproducto) as total from tc_productos where estatus=1 and (nombre_producto like '%" + producto_code + "%' or codigo_barras like '%" + producto_code + "%')";
+                    System.out.println("" + consul);
+                    rs2 = st2.executeQuery(consul);
+                    if (rs2.next()) {
+                        total = rs2.getInt("total");
                     }
                     rs2.close();
                     st2.close();
                     conlocal.desconectar();
                 } catch (SQLException ex) {
-                    
+
                 }
-                if(total<=0){
+                if (total <= 0) {
                     Toolkit.getDefaultToolkit().beep();
-                }else{
+                } else {
                     //Frame f= JOptionPane.getFrameForComponent(this);
                     catalogo_productos dialog = new catalogo_productos(null, true);
                     dialog.cargatabla2(producto_code);
                     dialog.show();
                 }
-                
+
                 //System.out.println("no existe en el producto");
             }
-             
+
         } catch (SQLException ex) {
         }
-        
+
         jtproductos.getColumnModel().getColumn(6).setMaxWidth(0);
         jtproductos.getColumnModel().getColumn(6).setMinWidth(0);
         jtproductos.getColumnModel().getColumn(6).setPreferredWidth(0);
         jtproductos.getColumnModel().getColumn(6).setWidth(0);
-        
+
         txtcanti.setText("1");
         txtproducto.setText("");
         cargar_informacion();
         txtproducto.requestFocus();
+//llenamos el bean principal
+
+        variableEstaticas.tabla=jtproductos;
+        variableEstaticas.cliente=jccliente.getSelectedItem().toString();
     }
-    
-    
-    
-    
-    public static void cargar_productotouch(String producto_code,String tipobusqueda,String cantidadtouch,String preciotouch){
-        DefaultTableModel modelo=(DefaultTableModel) jtproductos.getModel();          
-        String codigo_barras=producto_code;
-        conex con=new conex();          
-        ResultSet rs = null;   
-        String myQuery="";
-        if(tipobusqueda.equals("CB")){
-            myQuery = "SELECT * FROM tc_productos WHERE codigo_barras='"+codigo_barras+"' and estatus=1";
+
+    public static void addListaDinamica(producto bean) {
+        List<producto> lista = variableEstaticas.lista;
+        boolean ban = false;
+        if (lista.size() > 0) {
+            for (int i = 0; lista.size() < 10; i++) {
+                producto bean2 = lista.get(i);
+
+                if (bean2.getId().equalsIgnoreCase(bean.getId())) {
+                    //si esxite solo se actualizan los datos
+                    double newCantidad = 0.0;
+                    double newImporte = 0.0;
+
+                    newCantidad = Double.parseDouble(bean2.getCantidad()) + Double.parseDouble(bean.getCantidad());
+                    newImporte = Double.parseDouble(bean2.getImporte()) + Double.parseDouble(bean.getImporte());
+                    lista.get(i).setCantidad(newCantidad + "");
+                    lista.get(i).setImporte(newImporte + "");
+                    ban = true;
+                    break;
+                } else {
+
+                }
+
+            }
+
+            if (ban) {
+                System.out.println("ya se modifico");
+            } else {
+                variableEstaticas.lista.add(bean);
+            }
+
+        } else {
+
         }
-        if(tipobusqueda.equals("ID")){
-            myQuery = "SELECT * FROM tc_productos WHERE idproducto='"+codigo_barras+"' and estatus=1"; //el estatus es producto comun
-        }        
+    }
+
+    public static void cargar_productotouch(String producto_code, String tipobusqueda, String cantidadtouch, String preciotouch) {
+        System.out.println("touech aqui");
+        DefaultTableModel modelo = (DefaultTableModel) jtproductos.getModel();
+        String codigo_barras = producto_code;
+        conex con = new conex();
+        ResultSet rs = null;
+        String myQuery = "";
+        if (tipobusqueda.equals("CB")) {
+            myQuery = "SELECT * FROM tc_productos WHERE codigo_barras='" + codigo_barras + "' and estatus=1";
+        }
+        if (tipobusqueda.equals("ID")) {
+            myQuery = "SELECT * FROM tc_productos WHERE idproducto='" + codigo_barras + "' and estatus=1"; //el estatus es producto comun
+        }
         //System.out.println(""+myQuery);
-        try {  
+        try {
             Statement st = con.getConnection().createStatement();
             rs = st.executeQuery(myQuery);
-            float precio=0,preciomayoreo=0;
-            float preciopromo=0;
-            int cantidadpromo=0;
-            int cantimayoreo=0;
-            double ieps=0;
-            String codigobarra="",producto="";
-            int existencia=0;
-            String id="";
-            boolean existe=false;
-            String agranel="";
-            if(rs.next()) {                 
-                precio=Float.parseFloat(preciotouch);
-                codigobarra=rs.getString("codigo_barras");
-                producto=rs.getString("nombre_producto");
-                existencia=rs.getInt("existencia");
-                id=rs.getString("idproducto");
-                preciomayoreo=Float.parseFloat(preciotouch);
-                cantimayoreo=rs.getInt("cantidad_mayoreo");
-                preciopromo=rs.getFloat("precio_promocion");
-                cantidadpromo=rs.getInt("cantidad_promocion");
-                agranel=rs.getString("agranel");
-                ieps=rs.getDouble("ieps");
-                existe=true;
-                if(cantimayoreo==0){
-                    cantimayoreo=10000;
+            float precio = 0, preciomayoreo = 0;
+            float preciopromo = 0;
+            int cantidadpromo = 0;
+            int cantimayoreo = 0;
+            double ieps = 0;
+            String codigobarra = "", producto = "";
+            int existencia = 0;
+            String id = "";
+            boolean existe = false;
+            String agranel = "";
+            if (rs.next()) {
+                precio = Float.parseFloat(preciotouch);
+                codigobarra = rs.getString("codigo_barras");
+                producto = rs.getString("nombre_producto");
+                existencia = rs.getInt("existencia");
+                id = rs.getString("idproducto");
+                preciomayoreo = Float.parseFloat(preciotouch);
+                cantimayoreo = rs.getInt("cantidad_mayoreo");
+                preciopromo = rs.getFloat("precio_promocion");
+                cantidadpromo = rs.getInt("cantidad_promocion");
+                agranel = rs.getString("agranel");
+                ieps = rs.getDouble("ieps");
+                existe = true;
+                if (cantimayoreo == 0) {
+                    cantimayoreo = 10000;
                 }
-                
-                funciones obtenimagen=new funciones();
-                Image foto=obtenimagen.obtenImagenes("SELECT imagen FROM tc_productos where idproducto="+id);
-                System.out.println("foto: "+foto);
-                if(foto==null){
+
+                funciones obtenimagen = new funciones();
+                Image foto = obtenimagen.obtenImagenes("SELECT imagen FROM tc_productos where idproducto=" + id);
+                System.out.println("foto: " + foto);
+                if (foto == null) {
                     jlfoto.setText("");
                     jlfoto.setIcon(null);
                     jPanel1.updateUI();
-                }else{
+                } else {
                     ImageIcon icon = new ImageIcon(foto.getScaledInstance(jlfoto.getWidth(), jlfoto.getHeight(), Image.SCALE_DEFAULT));
                     jlfoto.setText("");
                     jlfoto.setIcon(icon);
                     jPanel1.updateUI();
                 }
-                
+
                 //modelo.addRow(new Object[]{rs.getString("codigo_barras"),rs.getString("nombre_producto"),rs.getString("precio_venta"),"1","10",rs.getString("existencia")});
             }
-           
-            rs.close(); 
+
+            rs.close();
             st.close();
-            con.desconectar();   
-            
-            if(existencia<=0){
+            con.desconectar();
+
+            if (existencia <= 0) {
                 //existe=false;
                 //JOptionPane.showMessageDialog(null, "No cuenta con existencia de este producto.", "Sin existencia.", JOptionPane.ERROR_MESSAGE);
             }
-            
-            if(existe){
-                String cantidadini=cantidadtouch;
-                float importe=precio;
-                if(agranel.equals("SI")){                                
-                        Frame f = JOptionPane.getFrameForComponent(null);
-                        Agranel agran=new Agranel(f,true,producto,precio+"");
-                        agran.show();
-                        cantidadini=cantidadagranel; 
-                        importe=precio*Float.parseFloat(cantidadtouch);                        
-                        funciones redondear=new funciones();
-                        double imp=redondear.redondearDecimales(importe, 2);
-                        importe=(float) imp;
+
+            if (existe) {
+                String cantidadini = cantidadtouch;
+                float importe = precio;
+                if (agranel.equals("SI")) {
+                    Frame f = JOptionPane.getFrameForComponent(null);
+                    Agranel agran = new Agranel(f, true, producto, precio + "");
+                    agran.show();
+                    cantidadini = cantidadagranel;
+                    importe = precio * Float.parseFloat(cantidadtouch);
+                    funciones redondear = new funciones();
+                    double imp = redondear.redondearDecimales(importe, 2);
+                    importe = (float) imp;
                 }
-                boolean existe_tabla_temp=false;
-                for(int fila=0; fila<jtproductos.getRowCount(); fila++){
-                    String barcode=jtproductos.getValueAt(fila, 0).toString().trim();                 
-                    float precio_unitario=Float.parseFloat(jtproductos.getValueAt(fila, 2).toString().trim());
-                    float cantidad=Float.parseFloat(jtproductos.getValueAt(fila, 3).toString().trim());                             
-                    float existencia_total=Float.parseFloat(jtproductos.getValueAt(fila, 5).toString().trim());
-                    String id_prod=jtproductos.getValueAt(fila, 6).toString().trim();                 
-                    if(id_prod.equals(id)){         
-                    //if(barcode.equals(codigobarra)){
-                        if(agranel.equals("SI")){
-                            cantidad=Float.parseFloat(cantidadtouch);  
-                        }else{
-                            cantidad=Float.parseFloat(cantidadtouch);  
+                boolean existe_tabla_temp = false;
+                for (int fila = 0; fila < jtproductos.getRowCount(); fila++) {
+                    String barcode = jtproductos.getValueAt(fila, 0).toString().trim();
+                    float precio_unitario = Float.parseFloat(jtproductos.getValueAt(fila, 2).toString().trim());
+                    float cantidad = Float.parseFloat(jtproductos.getValueAt(fila, 3).toString().trim());
+                    float existencia_total = Float.parseFloat(jtproductos.getValueAt(fila, 5).toString().trim());
+                    String id_prod = jtproductos.getValueAt(fila, 6).toString().trim();
+                    if (id_prod.equals(id)) {
+                        //if(barcode.equals(codigobarra)){
+                        if (agranel.equals("SI")) {
+                            cantidad = Float.parseFloat(cantidadtouch);
+                        } else {
+                            cantidad = Float.parseFloat(cantidadtouch);
                         }
-                        System.out.println(cantidad+">="+cantimayoreo);
-                        if(cantidad>=cantimayoreo){
-                            precio_unitario=preciomayoreo;
+                        System.out.println(cantidad + ">=" + cantimayoreo);
+                        if (cantidad >= cantimayoreo) {
+                            precio_unitario = preciomayoreo;
                         }
                         //PROMOCION
-                        System.out.println(""+cantidadpromo+"!=0 && "+cantidad+">="+cantidadpromo);
-                        if(cantidadpromo!=0 && cantidad>=cantidadpromo){
+                        System.out.println("" + cantidadpromo + "!=0 && " + cantidad + ">=" + cantidadpromo);
+                        if (cantidadpromo != 0 && cantidad >= cantidadpromo) {
                             int response = JOptionPane.showConfirmDialog(null, "Este producto tiene promocion desea aplicar?", "Confirmar",
-                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                             if (response == JOptionPane.YES_OPTION) {
-                                 System.out.println("PRECIO PROMO");
-                                 precio_unitario=preciopromo;
-                            } 
+                                System.out.println("PRECIO PROMO");
+                                precio_unitario = preciopromo;
+                            }
                         }
                         //FIN PROMO
-                        
-                        funciones redondear2=new funciones();                  
-                        ieps=precio_unitario*ieps;
-                        ieps=redondear2.redondearDecimales(ieps, 2);     
-                        ieps=ieps*cantidad;
-                        ieps=redondear2.redondearDecimales(ieps, 2);     
-                                
-                        jtproductos.setValueAt(precio_unitario, fila, 2); 
-                        
-                        float total_final=precio_unitario*cantidad;  
-                        funciones redondear=new funciones();
-                        double totl=redondear.redondearDecimales(total_final, 2);
-                        total_final=(float) totl;
-                        if(agranel.equals("SI")){
-                            existencia_total=existencia_total-Float.parseFloat(cantidadagranel);
-                        }else{
-                            existencia_total=existencia_total-1;
+
+                        funciones redondear2 = new funciones();
+                        ieps = precio_unitario * ieps;
+                        ieps = redondear2.redondearDecimales(ieps, 2);
+                        ieps = ieps * cantidad;
+                        ieps = redondear2.redondearDecimales(ieps, 2);
+
+                        jtproductos.setValueAt(precio_unitario, fila, 2);
+
+                        float total_final = precio_unitario * cantidad;
+                        funciones redondear = new funciones();
+                        double totl = redondear.redondearDecimales(total_final, 2);
+                        total_final = (float) totl;
+                        if (agranel.equals("SI")) {
+                            existencia_total = existencia_total - Float.parseFloat(cantidadagranel);
+                        } else {
+                            existencia_total = existencia_total - 1;
                         }
-                        jtproductos.setValueAt(cantidadtouch, fila, 3); 
-                        jtproductos.setValueAt(total_final, fila, 4);   
-                        jtproductos.setValueAt(existencia_total, fila, 5);  
-                        jtproductos.setValueAt(ieps+"", fila, 8);  
+                        jtproductos.setValueAt(cantidadtouch, fila, 3);
+                        jtproductos.setValueAt(total_final, fila, 4);
+                        jtproductos.setValueAt(existencia_total, fila, 5);
+                        jtproductos.setValueAt(ieps + "", fila, 8);
                         System.out.println("MAS DE UN REGISTRO PERO YA ESTA EN TABLA");
-                        existe_tabla_temp=true;
+                        existe_tabla_temp = true;
                     }/*else{//es nuevo y se agrega    
                        System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
                        modelo.addRow(new Object[]{codigobarra,producto,precio+"","1",precio+"",existencia-1});
-                    }*/                 
+                    }*/
                 }
 
-                if(existe_tabla_temp==false && jtproductos.getRowCount()>0){
-                        System.out.println(""+cantidadpromo+"!=0 && "+1+">="+cantidadpromo);
-                        if(cantidadpromo!=0 && 1>=cantidadpromo){
-                            int response = JOptionPane.showConfirmDialog(null, "Este producto tiene promocion desea aplicar?", "Confirmar",
-                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                            if (response == JOptionPane.YES_OPTION) {
-                                 System.out.println("PRECIO PROMO");
-                                 precio=preciopromo;
-                                 importe=precio;
-                            } 
-                       }
-                    
-                        funciones redondear=new funciones();                  
-                        ieps=precio*ieps;
-                        ieps=redondear.redondearDecimales(ieps, 2);     
-                        
-                       System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
-                       importe=precio*Float.parseFloat(cantidadtouch);
-                       modelo.addRow(new Object[]{codigobarra,producto,precio+"",cantidadtouch+"",importe+"",existencia-1,id,"0",ieps+""});
-                }
-                
-                if(jtproductos.getRowCount()<=0){//es el primer registro
-                    System.out.println(""+cantidadpromo+"!=0 && "+1+">="+cantidadpromo);
-                    
-                    if(Float.parseFloat(cantidadini)>=cantimayoreo){
-                            precio=preciomayoreo;
-                    }
-                    
-                    if(cantidadpromo!=0 && 1>=cantidadpromo){
+                if (existe_tabla_temp == false && jtproductos.getRowCount() > 0) {
+                    System.out.println("" + cantidadpromo + "!=0 && " + 1 + ">=" + cantidadpromo);
+                    if (cantidadpromo != 0 && 1 >= cantidadpromo) {
                         int response = JOptionPane.showConfirmDialog(null, "Este producto tiene promocion desea aplicar?", "Confirmar",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                         if (response == JOptionPane.YES_OPTION) {
-                             System.out.println("PRECIO PROMO");
-                             precio=preciopromo;
-                             importe=precio;
-                        } 
-                   }
-                   funciones redondear=new funciones();                  
-                   ieps=precio*ieps;
-                   ieps=redondear.redondearDecimales(ieps, 2);                   
-                   System.out.println("PRIMER REGISTRO");
-                   importe=precio*Float.parseFloat(cantidadtouch);
-                   modelo.addRow(new Object[]{codigobarra,producto,precio+"",cantidadtouch+"",importe+"",existencia-1,id,"0",ieps+""});
+                            System.out.println("PRECIO PROMO");
+                            precio = preciopromo;
+                            importe = precio;
+                        }
+                    }
+
+                    funciones redondear = new funciones();
+                    ieps = precio * ieps;
+                    ieps = redondear.redondearDecimales(ieps, 2);
+
+                    System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
+                    importe = precio * Float.parseFloat(cantidadtouch);
+                    System.out.println("vamos llenar lista di ");
+
+                    modelo.addRow(new Object[]{codigobarra, producto, precio + "", cantidadtouch + "", importe + "", existencia - 1, id, "0", ieps + ""});
+                    producto bean = new producto();
+                    bean.setCodigoBarras(codigobarra);
+                    bean.setDescripcion(producto);
+                    bean.setPrecio(precio + "");
+                    bean.setCantidad(cantidadini);
+                    bean.setImporte(importe + "");
+                    bean.setExitencias((existencia - 1 + ""));
+                    bean.setId(id + "");
+                    bean.setDescuento("0");
+                    bean.setIeps(ieps + "");
+                   addListaDinamica(bean);
+
+                }
+
+                if (jtproductos.getRowCount() <= 0) {//es el primer registro
+                    System.out.println("" + cantidadpromo + "!=0 && " + 1 + ">=" + cantidadpromo);
+
+                    if (Float.parseFloat(cantidadini) >= cantimayoreo) {
+                        precio = preciomayoreo;
+                    }
+
+                    if (cantidadpromo != 0 && 1 >= cantidadpromo) {
+                        int response = JOptionPane.showConfirmDialog(null, "Este producto tiene promocion desea aplicar?", "Confirmar",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                        if (response == JOptionPane.YES_OPTION) {
+                            System.out.println("PRECIO PROMO");
+                            precio = preciopromo;
+                            importe = precio;
+                        }
+                    }
+                    funciones redondear = new funciones();
+                    ieps = precio * ieps;
+                    ieps = redondear.redondearDecimales(ieps, 2);
+                    System.out.println("PRIMER REGISTRO");
+                    importe = precio * Float.parseFloat(cantidadtouch);
+                    modelo.addRow(new Object[]{codigobarra, producto, precio + "", cantidadtouch + "", importe + "", existencia - 1, id, "0", ieps + ""});
                 }
             }
-             
+
         } catch (SQLException ex) {
         }
-        
+
         jtproductos.getColumnModel().getColumn(6).setMaxWidth(0);
         jtproductos.getColumnModel().getColumn(6).setMinWidth(0);
         jtproductos.getColumnModel().getColumn(6).setPreferredWidth(0);
         jtproductos.getColumnModel().getColumn(6).setWidth(0);
-        
+
         txtproducto.setText("");
         cargar_informacion();
+        variableEstaticas.tabla=jtproductos;
+         variableEstaticas.cliente=jccliente.getSelectedItem().toString();
         txtproducto.requestFocus();
     }
-    
-    
-    public static void cargar_productobusqueda(String producto_code){
-        DefaultTableModel modelo=(DefaultTableModel) jtproductos.getModel();          
-        String codigo_barras=producto_code;
-        conex con=new conex();          
-        ResultSet rs = null;       
-        String myQuery = "SELECT * FROM tc_productos WHERE idproducto='"+codigo_barras+"' and estatus=1"; //el estatus es producto comun
+
+    public static void cargar_productobusqueda(String producto_code) {
+        DefaultTableModel modelo = (DefaultTableModel) jtproductos.getModel();
+        String codigo_barras = producto_code;
+        conex con = new conex();
+        ResultSet rs = null;
+        String myQuery = "SELECT * FROM tc_productos WHERE idproducto='" + codigo_barras + "' and estatus=1"; //el estatus es producto comun
         //System.out.println(""+myQuery);
-        try {  
+        try {
             Statement st = con.getConnection().createStatement();
             rs = st.executeQuery(myQuery);
-            float precio=0;
-            String codigobarra="",producto="";
-            int existencia=0;
-            String id="";
-            boolean existe=false;
-            if(rs.next()) {                 
-                precio=rs.getFloat("precio_venta");
-                codigobarra=rs.getString("codigo_barras");
-                producto=rs.getString("nombre_producto");
-                existencia=rs.getInt("existencia");
-                id=rs.getString("idproducto");
-                existe=true;
+            float precio = 0;
+            String codigobarra = "", producto = "";
+            int existencia = 0;
+            String id = "";
+            boolean existe = false;
+            if (rs.next()) {
+                precio = rs.getFloat("precio_venta");
+                codigobarra = rs.getString("codigo_barras");
+                producto = rs.getString("nombre_producto");
+                existencia = rs.getInt("existencia");
+                id = rs.getString("idproducto");
+                existe = true;
                 //modelo.addRow(new Object[]{rs.getString("codigo_barras"),rs.getString("nombre_producto"),rs.getString("precio_venta"),"1","10",rs.getString("existencia")});
             }
-            rs.close(); 
+            rs.close();
             st.close();
-            con.desconectar();   
-            
-            
-            if(existencia<=0){
+            con.desconectar();
+
+            if (existencia <= 0) {
                 //existe=false;
                 //JOptionPane.showMessageDialog(null, "No cuenta con existencia de este producto.", "Sin existencia.", JOptionPane.ERROR_MESSAGE);
             }
-            
-            
-            if(existe){
-                boolean existe_tabla_temp=false;
-                for(int fila=0; fila<jtproductos.getRowCount(); fila++){
-                    String barcode=jtproductos.getValueAt(fila, 0).toString().trim();                 
-                    float precio_unitario=Float.parseFloat(jtproductos.getValueAt(fila, 2).toString().trim());
-                    int cantidad=Integer.parseInt(jtproductos.getValueAt(fila, 3).toString().trim());                                  
-                    int existencia_total=Integer.parseInt(jtproductos.getValueAt(fila, 5).toString().trim());
-                    String id_prod=jtproductos.getValueAt(fila, 6).toString().trim();                 
-                    if(id_prod.equals(id)){         
-                    //if(barcode.equals(codigobarra)){
+
+            if (existe) {
+                boolean existe_tabla_temp = false;
+                for (int fila = 0; fila < jtproductos.getRowCount(); fila++) {
+                    String barcode = jtproductos.getValueAt(fila, 0).toString().trim();
+                    float precio_unitario = Float.parseFloat(jtproductos.getValueAt(fila, 2).toString().trim());
+                    int cantidad = Integer.parseInt(jtproductos.getValueAt(fila, 3).toString().trim());
+                    int existencia_total = Integer.parseInt(jtproductos.getValueAt(fila, 5).toString().trim());
+                    String id_prod = jtproductos.getValueAt(fila, 6).toString().trim();
+                    if (id_prod.equals(id)) {
+                        //if(barcode.equals(codigobarra)){
                         cantidad++;
-                        float total_final=precio_unitario*cantidad;                     
-                        existencia_total=existencia_total-1;
-                        jtproductos.setValueAt(cantidad, fila, 3); 
-                        jtproductos.setValueAt(total_final, fila, 4);   
-                        jtproductos.setValueAt(existencia_total, fila, 5);  
+                        float total_final = precio_unitario * cantidad;
+                        existencia_total = existencia_total - 1;
+                        jtproductos.setValueAt(cantidad, fila, 3);
+                        jtproductos.setValueAt(total_final, fila, 4);
+                        jtproductos.setValueAt(existencia_total, fila, 5);
                         System.out.println("MAS DE UN REGISTRO PERO YA ESTA EN TABLA");
-                        existe_tabla_temp=true;
+                        existe_tabla_temp = true;
                     }/*else{//es nuevo y se agrega    
                        System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
                        modelo.addRow(new Object[]{codigobarra,producto,precio+"","1",precio+"",existencia-1});
-                    }*/                 
+                    }*/
                 }
 
-                if(existe_tabla_temp==false && jtproductos.getRowCount()>0){
-                       System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
-                       modelo.addRow(new Object[]{codigobarra,producto,precio+"","1",precio+"",existencia-1,id,"0"});
-                }
+                if (existe_tabla_temp == false && jtproductos.getRowCount() > 0) {
+                    System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
+                    modelo.addRow(new Object[]{codigobarra, producto, precio + "", "1", precio + "", existencia - 1, id, "0"});
                 
-                if(jtproductos.getRowCount()<=0){//es el primer registro
-                   System.out.println("PRIMER REGISTRO");
-                   modelo.addRow(new Object[]{codigobarra,producto,precio+"","1",precio+"",existencia-1,id,"0"});
+                }
+
+                if (jtproductos.getRowCount() <= 0) {//es el primer registro
+                    System.out.println("PRIMER REGISTRO");
+                    modelo.addRow(new Object[]{codigobarra, producto, precio + "", "1", precio + "", existencia - 1, id, "0"});
                 }
             }
-             
+
         } catch (SQLException ex) {
         }
-        
+
         jtproductos.getColumnModel().getColumn(6).setMaxWidth(0);
         jtproductos.getColumnModel().getColumn(6).setMinWidth(0);
         jtproductos.getColumnModel().getColumn(6).setPreferredWidth(0);
         jtproductos.getColumnModel().getColumn(6).setWidth(0);
-        
+
         txtproducto.setText("");
         cargar_informacion();
+        variableEstaticas.tabla=jtproductos;
         txtproducto.requestFocus();
     }
-    
-    
-    public static void cargar_productobusquedacomun(String producto_code,String cantidadnueva,String montototal){
-        DefaultTableModel modelo=(DefaultTableModel) jtproductos.getModel();          
-        String codigo_barras=producto_code;
-        conex con=new conex();          
-        ResultSet rs = null;       
-        String myQuery = "SELECT * FROM tc_productos WHERE idproducto='"+codigo_barras+"' and estatus=3"; //el estatus es producto comun
-        System.out.println(""+myQuery);
-        try {  
+
+    public static void cargar_productobusquedacomun(String producto_code, String cantidadnueva, String montototal) {
+        DefaultTableModel modelo = (DefaultTableModel) jtproductos.getModel();
+        String codigo_barras = producto_code;
+        conex con = new conex();
+        ResultSet rs = null;
+        String myQuery = "SELECT * FROM tc_productos WHERE idproducto='" + codigo_barras + "' and estatus=3"; //el estatus es producto comun
+        System.out.println("" + myQuery);
+        try {
             Statement st = con.getConnection().createStatement();
             rs = st.executeQuery(myQuery);
-            float precio=0;
-            String codigobarra="",producto="";
-            int existencia=0;
-            String id="";
-            boolean existe=false;
-            if(rs.next()) {                 
-                precio=rs.getFloat("precio_venta");
-                codigobarra=rs.getString("codigo_barras");
-                producto=rs.getString("nombre_producto");
-                existencia=rs.getInt("existencia");
-                id=rs.getString("idproducto");
-                existe=true;
+            float precio = 0;
+            String codigobarra = "", producto = "";
+            int existencia = 0;
+            String id = "";
+            boolean existe = false;
+            if (rs.next()) {
+                precio = rs.getFloat("precio_venta");
+                codigobarra = rs.getString("codigo_barras");
+                producto = rs.getString("nombre_producto");
+                existencia = rs.getInt("existencia");
+                id = rs.getString("idproducto");
+                existe = true;
                 //modelo.addRow(new Object[]{rs.getString("codigo_barras"),rs.getString("nombre_producto"),rs.getString("precio_venta"),"1","10",rs.getString("existencia")});
             }
-            rs.close(); 
+            rs.close();
             st.close();
-            con.desconectar();   
-            
-            if(existe){
-                boolean existe_tabla_temp=false;
-                for(int fila=0; fila<jtproductos.getRowCount(); fila++){
-                    String barcode=jtproductos.getValueAt(fila, 0).toString().trim();                 
-                    float precio_unitario=Float.parseFloat(jtproductos.getValueAt(fila, 2).toString().trim());
-                    float cantidad=Float.parseFloat(jtproductos.getValueAt(fila, 3).toString().trim());                                  
-                    int existencia_total=Integer.parseInt(jtproductos.getValueAt(fila, 5).toString().trim());
-                    String id_prod=jtproductos.getValueAt(fila, 6).toString().trim();                 
-                    if(id_prod.equals(id)){         
-                    //if(barcode.equals(codigobarra)){
+            con.desconectar();
+
+            if (existe) {
+                boolean existe_tabla_temp = false;
+                for (int fila = 0; fila < jtproductos.getRowCount(); fila++) {
+                    String barcode = jtproductos.getValueAt(fila, 0).toString().trim();
+                    float precio_unitario = Float.parseFloat(jtproductos.getValueAt(fila, 2).toString().trim());
+                    float cantidad = Float.parseFloat(jtproductos.getValueAt(fila, 3).toString().trim());
+                    int existencia_total = Integer.parseInt(jtproductos.getValueAt(fila, 5).toString().trim());
+                    String id_prod = jtproductos.getValueAt(fila, 6).toString().trim();
+                    if (id_prod.equals(id)) {
+                        //if(barcode.equals(codigobarra)){
                         cantidad++;
-                        float total_final=precio_unitario*cantidad;                     
-                        existencia_total=existencia_total-1;
-                        jtproductos.setValueAt(cantidad, fila, 3); 
-                        jtproductos.setValueAt(total_final, fila, 4);   
-                        jtproductos.setValueAt(existencia_total, fila, 5);  
+                        float total_final = precio_unitario * cantidad;
+                        existencia_total = existencia_total - 1;
+                        jtproductos.setValueAt(cantidad, fila, 3);
+                        jtproductos.setValueAt(total_final, fila, 4);
+                        jtproductos.setValueAt(existencia_total, fila, 5);
                         System.out.println("MAS DE UN REGISTRO PERO YA ESTA EN TABLA");
-                        existe_tabla_temp=true;
+                        existe_tabla_temp = true;
                     }/*else{//es nuevo y se agrega    
                        System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
                        modelo.addRow(new Object[]{codigobarra,producto,precio+"","1",precio+"",existencia-1});
-                    }*/                 
+                    }*/
                 }
 
-                if(existe_tabla_temp==false && jtproductos.getRowCount()>0){
-                       System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
-                       modelo.addRow(new Object[]{codigobarra,producto,precio+"",cantidadnueva,montototal+"",existencia-1,id,"0","0"});
+                if (existe_tabla_temp == false && jtproductos.getRowCount() > 0) {
+                    System.out.println("MAS DE UN REGISTRO, PERO NUEVO");
+                    modelo.addRow(new Object[]{codigobarra, producto, precio + "", cantidadnueva, montototal + "", existencia - 1, id, "0", "0"});
                 }
-                
-                if(jtproductos.getRowCount()<=0){//es el primer registro
-                   System.out.println("PRIMER REGISTRO comun");
-                   modelo.addRow(new Object[]{codigobarra,producto,precio+"",cantidadnueva,montototal+"",existencia-1,id,"0","0"});
+
+                if (jtproductos.getRowCount() <= 0) {//es el primer registro
+                    System.out.println("PRIMER REGISTRO comun");
+                    modelo.addRow(new Object[]{codigobarra, producto, precio + "", cantidadnueva, montototal + "", existencia - 1, id, "0", "0"});
                 }
             }
-             
+
         } catch (SQLException ex) {
         }
-        
+
         jtproductos.getColumnModel().getColumn(6).setMaxWidth(0);
         jtproductos.getColumnModel().getColumn(6).setMinWidth(0);
         jtproductos.getColumnModel().getColumn(6).setPreferredWidth(0);
         jtproductos.getColumnModel().getColumn(6).setWidth(0);
-        
+
         txtproducto.setText("");
         cargar_informacion();
+        variableEstaticas.tabla=jtproductos;
         txtproducto.requestFocus();
     }
-    
-    
-    public static void cargar_informacion(){
-       double total_valor=0,ieps=0;
-       int total=0;
-       float noitem=0;
-       for(int fila=0; fila<jtproductos.getRowCount(); fila++){
-                String precio=jtproductos.getValueAt(fila, 2).toString();
-                String cantidad=jtproductos.getValueAt(fila, 3).toString();
-                String id=jtproductos.getValueAt(fila, 6).toString();
-                Float costototal=Float.parseFloat(precio)*Float.parseFloat(cantidad);
-                funciones redondear=new funciones();
-                double imp=redondear.redondearDecimales(costototal, 2);
-                System.out.println("enter: "+imp);
-                jtproductos.setValueAt(imp+"", fila, 4);
-           
-           
-               noitem=noitem+Float.parseFloat(jtproductos.getValueAt(fila, 3).toString());
-                total_valor=total_valor+Float.parseFloat(jtproductos.getValueAt(fila, 4).toString());
-                ieps=ieps+Float.parseFloat(jtproductos.getValueAt(fila, 8).toString());
-                //System.out.println(""+total_valor);
-                total++;
-       }
-       //DecimalFormat df = new DecimalFormat("0.00"); 
-       //jlmonto.setText("$ "+df.format(total_valor)+"");    
-       funciones redondear=new funciones();
-       ieps=redondear.redondearDecimales(ieps, 2);              
-      
-       lbieps.setText(""+ieps+"");       
-       total_valor=redondear.redondearDecimales(total_valor, 2);
-       jlmonto.setText("$ "+total_valor+"");       
-       jltotal.setText("Total Productos: "+noitem+"   Filas: "+total);
-       double montototal=total_valor+(total_valor*obteniva());
-       montototal=redondear.redondearDecimales(montototal, 2);
-       montototal=montototal+ieps;
-       
-       jlgrantotal.setText("$ "+montototal+"");  
-       txtproducto.requestFocus();
-       
-   } 
 
+    public static void cargar_informacion() {
+        System.out.println("1");
+        double total_valor = 0, ieps = 0;
+        int total = 0;
+        float noitem = 0;
+        for (int fila = 0; fila < jtproductos.getRowCount(); fila++) {
+            producto bean = new producto();
+            String precio = jtproductos.getValueAt(fila, 2).toString();
+            String cantidad = jtproductos.getValueAt(fila, 3).toString();
+            String id = jtproductos.getValueAt(fila, 6).toString();
+            
+            String desc = jtproductos.getValueAt(fila, 7).toString();
 
-public void cobrar_venta(){
-    String cliente=jccliente.getSelectedItem().toString();
-    if(cliente.equals("Selecciona..")){
-        cliente="0";
-    }else{
-        cliente=obtenidcliente(cliente);
-    }
-    
-    
-    int numprod=jtproductos.getRowCount();
-    if(numprod>0){
-        ArrayList productos=new ArrayList();
-        for(int fila=0; fila<jtproductos.getRowCount(); fila++){
-               //id    codigobarras      precioventa     cantidad     totalprod    descriprod     ieps     descuento      antibiotico        lote
-               String antibiotico="NO",lote="0";
-               if(jtproductos.getValueAt(fila, 9)==null){
-               }else{
-                   antibiotico=jtproductos.getValueAt(fila, 9).toString();
-               }
-               if(jtproductos.getValueAt(fila, 10)==null){
-               }else{
-                    lote=jtproductos.getValueAt(fila, 10).toString();
-               }               
-               if(lote.equals("")){
-                   lote="0";
-               }
-               productos.add(jtproductos.getValueAt(fila, 6).toString()+"@"+jtproductos.getValueAt(fila, 0).toString()+"@"+jtproductos.getValueAt(fila, 2).toString()+"@"+jtproductos.getValueAt(fila, 3).toString()+"@"+jtproductos.getValueAt(fila, 4).toString()+"@"+jtproductos.getValueAt(fila, 1).toString()+"@"+jtproductos.getValueAt(fila, 8).toString()+"@"+jtproductos.getValueAt(fila, 7).toString()+"@"+antibiotico+"@"+lote);               
-       }
-        
-        int cant=jlmonto.getText().trim().length();
-        String monto=jlmonto.getText().trim().substring(1, cant); //se quita el caracter $        
-        double monto_final=Float.parseFloat(monto);
-        double ieps=Float.parseFloat(lbieps.getText().trim());
-        Frame f = JOptionPane.getFrameForComponent(this);
-        double iva=obteniva();
-        double subtotal=monto_final;
-        monto_final=monto_final+(monto_final*iva);
-        funciones redondeo=new funciones();
-        monto_final=redondeo.redondearDecimales(monto_final,2);
-        monto_final=monto_final+ieps;
-        //monto_final=Math.rint((monto_final*1000)/1000);//redondea los numeros
-        
-        String noreceta=txtnoreceta.getText().trim();
-        String medico=txtmedico.getText().trim();
-        
-        Cobrar_venta venta=new Cobrar_venta(f,true,monto_final,productos,subtotal,cliente,ieps,noreceta,medico);
-        venta.show();
-    }else{
-        JOptionPane.showMessageDialog(null, "No hay productos en la venta. ", "Error al registrar venta", JOptionPane.ERROR_MESSAGE);
-        ponerfocoenventa();
+            Float costototal = Float.parseFloat(precio) * Float.parseFloat(cantidad);
+            costototal=costototal-((costototal*Float.parseFloat(desc))/100);
+            
+            funciones redondear = new funciones();
+            double imp = redondear.redondearDecimales(costototal, 2);
+            System.out.println("enter: " + imp);
+            jtproductos.setValueAt(imp + "", fila, 4);
+
+            noitem = noitem + Float.parseFloat(jtproductos.getValueAt(fila, 3).toString());
+            total_valor = total_valor + Float.parseFloat(jtproductos.getValueAt(fila, 4).toString());
+            ieps = ieps + Float.parseFloat(jtproductos.getValueAt(fila, 8).toString());
+            //System.out.println(""+total_valor);
+            total++;
+
+        }
+        //DecimalFormat df = new DecimalFormat("0.00"); 
+        //jlmonto.setText("$ "+df.format(total_valor)+"");    
+        funciones redondear = new funciones();
+        ieps = redondear.redondearDecimales(ieps, 2);
+
+        lbieps.setText("" + ieps + "");
+        total_valor = redondear.redondearDecimales(total_valor, 2);
+        jlmonto.setText("$ " + total_valor + "");
+        jltotal.setText("Total Productos: " + noitem + "   Filas: " + total);
+        double montototal = total_valor + (total_valor * obteniva());
+        montototal = redondear.redondearDecimales(montototal, 2);
+        montototal = montototal + ieps;
+
+        jlgrantotal.setText("$ " + montototal + "");
+        txtproducto.requestFocus();
+
     }
 
-}    
+    public void cobrar_venta() {
+        String cliente = jccliente.getSelectedItem().toString();
+        if (cliente.equals("Selecciona..")) {
+            cliente = "0";
+        } else {
+            cliente = obtenidcliente(cliente);
+        }
 
-public void ponerfocoenventa(){
-    txtproducto.requestFocus();
-    
-}
+        int numprod = jtproductos.getRowCount();
+        if (numprod > 0) {
+            ArrayList productos = new ArrayList();
+            for (int fila = 0; fila < jtproductos.getRowCount(); fila++) {
+                //id    codigobarras      precioventa     cantidad     totalprod    descriprod     ieps     descuento      antibiotico        lote
+                String antibiotico = "NO", lote = "0";
+                if (jtproductos.getValueAt(fila, 9) == null) {
+                } else {
+                    antibiotico = jtproductos.getValueAt(fila, 9).toString();
+                }
+                if (jtproductos.getValueAt(fila, 10) == null) {
+                } else {
+                    lote = jtproductos.getValueAt(fila, 10).toString();
+                }
+                if (lote.equals("")) {
+                    lote = "0";
+                }
+                productos.add(jtproductos.getValueAt(fila, 6).toString() + "@" + jtproductos.getValueAt(fila, 0).toString() + "@" + jtproductos.getValueAt(fila, 2).toString() + "@" + jtproductos.getValueAt(fila, 3).toString() + "@" + jtproductos.getValueAt(fila, 4).toString() + "@" + jtproductos.getValueAt(fila, 1).toString() + "@" + jtproductos.getValueAt(fila, 8).toString() + "@" + jtproductos.getValueAt(fila, 7).toString() + "@" + antibiotico + "@" + lote);
+            }
 
-    
+            int cant = jlmonto.getText().trim().length();
+            String monto = jlmonto.getText().trim().substring(1, cant); //se quita el caracter $        
+            double monto_final = Float.parseFloat(monto);
+            double ieps = Float.parseFloat(lbieps.getText().trim());
+            Frame f = JOptionPane.getFrameForComponent(this);
+            double iva = obteniva();
+            double subtotal = monto_final;
+            monto_final = monto_final + (monto_final * iva);
+            funciones redondeo = new funciones();
+            monto_final = redondeo.redondearDecimales(monto_final, 2);
+            monto_final = monto_final + ieps;
+            //monto_final=Math.rint((monto_final*1000)/1000);//redondea los numeros
+
+            String noreceta = txtnoreceta.getText().trim();
+            String medico = txtmedico.getText().trim();
+
+            Cobrar_venta venta = new Cobrar_venta(f, true, monto_final, productos, subtotal, cliente, ieps, noreceta, medico);
+            venta.show();
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay productos en la venta. ", "Error al registrar venta", JOptionPane.ERROR_MESSAGE);
+            ponerfocoenventa();
+        }
+
+    }
+
+    public void ponerfocoenventa() {
+        txtproducto.requestFocus();
+
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
@@ -1575,314 +1735,285 @@ public void ponerfocoenventa(){
     public static javax.swing.JTextField txtproducto;
     // End of variables declaration//GEN-END:variables
 
-    
-    
-    
     public void keyPressed(KeyEvent e) {
-    if (e.VK_F3==e.getKeyCode())
-    {
-        Frame f = JOptionPane.getFrameForComponent(this);
-        ConsultarPrecio consultaprecio=new ConsultarPrecio(f,true);
-        consultaprecio.show();
-    }  
-       
-        
-        
-    if (e.VK_F7==e.getKeyCode())
-    {
-        Frame f = JOptionPane.getFrameForComponent(this);
-        ProductoComun dialog = new ProductoComun(f, true);
-        dialog.show();
-    }
-    if (e.VK_F8==e.getKeyCode())
-    {
-        Frame f = JOptionPane.getFrameForComponent(this);
-        EntradaEfectivo dialog = new EntradaEfectivo(f, true);
-        dialog.show();
-    }
-    if (e.VK_F9==e.getKeyCode())
-    {
-        Frame f = JOptionPane.getFrameForComponent(this);
-        SalidasEfectivo dialog = new SalidasEfectivo(f, true);
-        dialog.show();
-    }
-    if (e.VK_F6==e.getKeyCode())
-    {
-        Frame f = JOptionPane.getFrameForComponent(this);
-        CargarPosVenta POS = new CargarPosVenta(f, true);
-        POS.show();
-    }
-    
-    if (e.VK_F1==e.getKeyCode())
-    {
-        vaciartabla();
-        cargar_informacion();
-        ponerfocoenventa();
-    }
-     
-    
-    if (e.VK_F4==e.getKeyCode())//CAMBIAR COSTO AL PRODUCTO
-    {
-       DefaultTableModel modelo=(DefaultTableModel) jtproductos.getModel();  
-          int fila=-1;
-          fila=jtproductos.getSelectedRow();
-          if(fila!=-1){
-              System.out.println("filaactual: "+fila);
-              //String precio=jtproductos.getValueAt(fila, 2).toString();            
-              String id=jtproductos.getValueAt(fila, 6).toString();            
-              JFrame frame = new JFrame("Nuevo Precio");
-              // prompt the user to enter their name
-              String newprecio = JOptionPane.showInputDialog(frame, "Ingrese el nuevo precio?");              
-              if(newprecio==null){
-              }
-              else if(newprecio.equals("")){
-              }else{
-                  if(isValidDouble(newprecio)){
-                      try{
-                        float prec = Float.parseFloat(newprecio); // convirtiendo la cadena
-                        //for(int filapr=0; fila<jtproductos.getRowCount(); fila++){
-                        //    String id_prod=jtproductos.getValueAt(fila, 6).toString().trim();                 
-                        //    if(id_prod.equals(id)){  
-                                jtproductos.setValueAt(prec+"", fila, 2); 
-                                jtproductos.setValueAt(prec+"", fila, 4); 
-                                txtcanti.setText("1");
-                                txtproducto.setText("");
-                                cargar_informacion();
-                                txtproducto.requestFocus();
-                          //  }           
-                        //}
-                      }catch(NumberFormatException exfloat){                     
-                      }
-                      cargar_informacion();
-                  }else{
-                      JOptionPane.showMessageDialog(null, "El formato de la cantidad no es correcto.","Alerta",JOptionPane.ERROR_MESSAGE);
-                  }                  
-              }
-          }else{
-            JOptionPane.showMessageDialog(null, "Seleccionar un producto de la tabla.","Alerta",JOptionPane.ERROR_MESSAGE);
-         }
+        if (e.VK_F3 == e.getKeyCode()) {
+            Frame f = JOptionPane.getFrameForComponent(this);
+            ConsultarPrecio consultaprecio = new ConsultarPrecio(f, true);
+            consultaprecio.show();
+        }
+
+        if (e.VK_F7 == e.getKeyCode()) {
+            Frame f = JOptionPane.getFrameForComponent(this);
+            ProductoComun dialog = new ProductoComun(f, true);
+            dialog.show();
+        }
+        if (e.VK_F8 == e.getKeyCode()) {
+            Frame f = JOptionPane.getFrameForComponent(this);
+            EntradaEfectivo dialog = new EntradaEfectivo(f, true);
+            dialog.show();
+        }
+        if (e.VK_F9 == e.getKeyCode()) {
+            Frame f = JOptionPane.getFrameForComponent(this);
+            SalidasEfectivo dialog = new SalidasEfectivo(f, true);
+            dialog.show();
+        }
+        if (e.VK_F6 == e.getKeyCode()) {
+            Frame f = JOptionPane.getFrameForComponent(this);
+            CargarPosVenta POS = new CargarPosVenta(f, true);
+            POS.show();
+        }
+
+        if (e.VK_F1 == e.getKeyCode()) {
+            vaciartabla();
+            cargar_informacion();
+            ponerfocoenventa();
+        }
+
+        if (e.VK_F4 == e.getKeyCode())//CAMBIAR COSTO AL PRODUCTO
+        {
+            DefaultTableModel modelo = (DefaultTableModel) jtproductos.getModel();
+            int fila = -1;
+            fila = jtproductos.getSelectedRow();
+            if (fila != -1) {
+                System.out.println("filaactual: " + fila);
+                //String precio=jtproductos.getValueAt(fila, 2).toString();            
+                String id = jtproductos.getValueAt(fila, 6).toString();
+                JFrame frame = new JFrame("Nuevo Precio");
+                // prompt the user to enter their name
+                String newprecio = JOptionPane.showInputDialog(frame, "Ingrese el nuevo precio?");
+                if (newprecio == null) {
+                } else if (newprecio.equals("")) {
+                } else {
+                    if (isValidDouble(newprecio)) {
+                        try {
+                            float prec = Float.parseFloat(newprecio); // convirtiendo la cadena
+                            //for(int filapr=0; fila<jtproductos.getRowCount(); fila++){
+                            //    String id_prod=jtproductos.getValueAt(fila, 6).toString().trim();                 
+                            //    if(id_prod.equals(id)){  
+                            jtproductos.setValueAt(prec + "", fila, 2);
+                            jtproductos.setValueAt(prec + "", fila, 4);
+                            txtcanti.setText("1");
+                            txtproducto.setText("");
+                            cargar_informacion();
+                            txtproducto.requestFocus();
+                            //  }           
+                            //}
+                        } catch (NumberFormatException exfloat) {
+                        }
+                        cargar_informacion();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El formato de la cantidad no es correcto.", "Alerta", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Seleccionar un producto de la tabla.", "Alerta", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        if (e.VK_F10 == e.getKeyCode()) {
+            Frame f = JOptionPane.getFrameForComponent(this);
+            catalogo_productos dialog = new catalogo_productos(f, true);
+            dialog.show();
+            //Inicial iniprod=new Inicial();
+            //iniprod.setVisible(true);
+        }
+
+        if (e.VK_F12 == e.getKeyCode()) {
+            cobrar_venta();
+        }
+
     }
 
-    if (e.VK_F10==e.getKeyCode())
-    {
-        Frame f = JOptionPane.getFrameForComponent(this);
-        catalogo_productos dialog = new catalogo_productos(f, true);
-        dialog.show();
-        //Inicial iniprod=new Inicial();
-        //iniprod.setVisible(true);
-    }
-    
-    if (e.VK_F12==e.getKeyCode())
-    {
-        cobrar_venta();
-    }
-    
-   }
-
-
-    
     @Override
-    public void keyTyped(KeyEvent e) {        
+    public void keyTyped(KeyEvent e) {
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-    if (e.getSource()==txtproducto)
-    {
-        if (e.VK_ESCAPE==e.getKeyCode())
-        {
-            
+        if (e.getSource() == txtproducto) {
+            if (e.VK_ESCAPE == e.getKeyCode()) {
+
+            }
         }
-    }        
     }
-    
-    public static double obteniva(){
-    double iva=0.0;    
-    conex cn = new conex();    
-    String sql="SELECT parametro from to_parametros where clave='IVA'";
-    System.out.println(sql);
-    PreparedStatement pstm100;
-    try {
+
+    public static double obteniva() {
+        double iva = 0.0;
+        conex cn = new conex();
+        String sql = "SELECT parametro from to_parametros where clave='IVA'";
+        System.out.println(sql);
+        PreparedStatement pstm100;
+        try {
             pstm100 = (PreparedStatement) cn.getConnection().prepareStatement(sql);
             ResultSet rs100 = (ResultSet) pstm100.executeQuery();
-        while (rs100.next()) {
+            while (rs100.next()) {
 
-            iva=rs100.getDouble("parametro");	    		    			   
+                iva = rs100.getDouble("parametro");
             }
-        rs100.close();
-        pstm100.close();
-        cn.desconectar();
-    } catch (SQLException e2) {
+            rs100.close();
+            pstm100.close();
+            cn.desconectar();
+        } catch (SQLException e2) {
             // TODO Auto-generated catch block
             e2.printStackTrace();
-    }
-    iva=iva/100;
-    return iva;
+        }
+        iva = iva / 100;
+        return iva;
     }
 
-public boolean validaragranel(String idprod){
-    boolean valida=false;
-    conex cn = new conex();    
-    String sql="SELECT agranel from tc_productos where agranel='SI' and idproducto='"+idprod+"'";
-    System.out.println(sql);
-    PreparedStatement pstm100;
-    try {
+    public boolean validaragranel(String idprod) {
+        boolean valida = false;
+        conex cn = new conex();
+        String sql = "SELECT agranel from tc_productos where agranel='SI' and idproducto='" + idprod + "'";
+        System.out.println(sql);
+        PreparedStatement pstm100;
+        try {
             pstm100 = (PreparedStatement) cn.getConnection().prepareStatement(sql);
             ResultSet rs100 = (ResultSet) pstm100.executeQuery();
-            if(rs100.next()) {
-                valida=true;  		    			   
+            if (rs100.next()) {
+                valida = true;
             }
-        rs100.close();
-        pstm100.close();
-        cn.desconectar();
-    } catch (SQLException e2) {
+            rs100.close();
+            pstm100.close();
+            cn.desconectar();
+        } catch (SQLException e2) {
             // TODO Auto-generated catch block
             e2.printStackTrace();
+        }
+        return valida;
     }
-    return valida;
-}
 
+    public static void cargar_clientes() {
 
-public static void cargar_clientes(){
-       
         jccliente.removeAllItems();
         jccliente.addItem("Selecciona..");
-        conex con=new conex();          
-        ResultSet rs = null;       
-        String myQuery = "SELECT * FROM tc_clientes where estatus=1 order by nombre_completo asc";        
-        try {  
+        conex con = new conex();
+        ResultSet rs = null;
+        String myQuery = "SELECT * FROM tc_clientes where estatus=1 order by nombre_completo asc";
+        try {
             Statement st = con.getConnection().createStatement();
-            rs = st.executeQuery(myQuery);            
-            while(rs.next()) {     
-                jccliente.addItem(rs.getString("nombre_completo")+"-"+rs.getString("idcliente"));
+            rs = st.executeQuery(myQuery);
+            while (rs.next()) {
+                jccliente.addItem(rs.getString("nombre_completo") + "-" + rs.getString("idcliente"));
             }
-            String publico="";
-            myQuery = "SELECT * FROM tc_clientes where nombre_completo like '%publico%' order by nombre_completo asc";   
-            rs = st.executeQuery(myQuery);               
-            while(rs.next()) {     
-                publico=rs.getString("nombre_completo")+"-"+rs.getString("idcliente");
+            String publico = "";
+            myQuery = "SELECT * FROM tc_clientes where nombre_completo like '%publico%' order by nombre_completo asc";
+            rs = st.executeQuery(myQuery);
+            while (rs.next()) {
+                publico = rs.getString("nombre_completo") + "-" + rs.getString("idcliente");
             }
-            if(!publico.equals("")){
+            if (!publico.equals("")) {
                 jccliente.setSelectedItem(publico);
             }
-            rs.close(); 
+            rs.close();
             st.close();
-            con.desconectar();                
+            con.desconectar();
         } catch (SQLException ex) {
         }
-       
-   } 
 
-
-public static String obtenidcliente(String id){
-        String ids=id;
-        String[] temp=ids.split("-");
-        for(int i=1;i<2;i++){
-            ids=temp[i];
-        }
-    return ids;
     }
 
+    public static String obtenidcliente(String id) {
+        String ids = id;
+        String[] temp = ids.split("-");
+        for (int i = 1; i < 2; i++) {
+            ids = temp[i];
+        }
+        return ids;
+    }
 
+    public class MiRender extends DefaultTableCellRenderer {
 
+        public Component getTableCellRendererComponent(JTable table,
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int column) {
+            Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            boolean oddRow = (row % 2 == 0);
+            Color azul = new Color(220, 248, 239);
+            Color blanco = new Color(255, 255, 255);
+            Color seleccion = new Color(75, 131, 141);
 
-public class MiRender extends DefaultTableCellRenderer
-{
-   public Component getTableCellRendererComponent(JTable table,
-      Object value,
-      boolean isSelected,
-      boolean hasFocus,
-      int row,
-      int column)
-   {
-      Component comp = super.getTableCellRendererComponent (table, value, isSelected, hasFocus, row, column);
-      boolean oddRow = (row % 2 == 0);
-      Color azul = new Color(220, 248, 239);
-      Color blanco = new Color(255,255,255);
-      Color seleccion = new Color(75, 131, 141);    
-      
-      
-      if ( oddRow ){
-                 
-         //if(column==2){
-             this.setBackground(azul);
-            this.setForeground(Color.BLACK);         
-         /*}else{
+            if (oddRow) {
+
+                //if(column==2){
+                this.setBackground(azul);
+                this.setForeground(Color.BLACK);
+                /*}else{
              this.setBackground(blanco);
              this.setForeground(Color.BLACK); 
          }*/
-      } else {
-          
-          /*if(column==2){
+            } else {
+
+                /*if(column==2){
              this.setBackground(azul);
             this.setForeground(Color.white);         
          }else{*/
-             this.setBackground(blanco);
-             this.setForeground(Color.BLACK); 
-         //}
-          //this.setBackground(d);
-          //this.setForeground(Color.BLACK);  
-         // Restaurar los valores por defecto
-      }    
-      
-       if(isSelected){
-            this.setBackground(seleccion);
-            this.setForeground(Color.white);   
-      }
-      
-        
-      return this;
-   }
-}   
-   
-public void poner_venta_pendiente(){
-    int numprod=jtproductos.getRowCount();
-    if(numprod>0){
-       java.util.Date date = new java.util.Date();
-       DateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss");
-       String codigobarras="T"+dateFormat.format(date);
-       ArrayList productos=new ArrayList();
-       double monto=0;  
-        
-        conex conlocal=new conex();                   
-        ResultSet rs = null;            
-        try {
-            Statement st = conlocal.getConnection().createStatement();
-            for(int fila=0; fila<jtproductos.getRowCount(); fila++){
-               //codigobarras   descriprod  preciounitario  cantidad  importe    existencia    idprod   descuento   ieps          
-               productos.add(jtproductos.getValueAt(fila, 0).toString()+"@"+jtproductos.getValueAt(fila, 1).toString()+"@"+jtproductos.getValueAt(fila, 2).toString()+"@"+jtproductos.getValueAt(fila, 3).toString()+"@"+jtproductos.getValueAt(fila, 4).toString()+"@"+jtproductos.getValueAt(fila, 5).toString()+"@"+jtproductos.getValueAt(fila, 6).toString()+"@"+jtproductos.getValueAt(fila, 7).toString()+"@"+jtproductos.getValueAt(fila, 8).toString());               
-               monto=monto+Float.parseFloat(jtproductos.getValueAt(fila, 4).toString());
-               String consul="insert into to_pos_venta (folio,codbar,descprod,preciounitario,cantidad,importe,existencia,idprod,descuento,ieps,fecha,persona_atendio,tipo_venta)"
-               + " values('"+codigobarras+"','"+jtproductos.getValueAt(fila, 0).toString()+"','"+jtproductos.getValueAt(fila, 1).toString()+"','"+jtproductos.getValueAt(fila, 2).toString()+"','"+jtproductos.getValueAt(fila, 3).toString()+"','"+jtproductos.getValueAt(fila, 4).toString()+"','"+jtproductos.getValueAt(fila, 5).toString()+"','"+jtproductos.getValueAt(fila, 6).toString()+"','"+jtproductos.getValueAt(fila, 7).toString()+"','"+jtproductos.getValueAt(fila, 8).toString()+"',now(),'"+accesoSistema.nombreuser+"','VENTATEMPORAL')";
-               System.out.println(""+consul);
-               st.executeUpdate(consul);            
-            }            
-            conlocal.desconectar();
-        } catch (SQLException ex) {
-            
+                this.setBackground(blanco);
+                this.setForeground(Color.BLACK);
+                //}
+                //this.setBackground(d);
+                //this.setForeground(Color.BLACK);  
+                // Restaurar los valores por defecto
+            }
+
+            if (isSelected) {
+                this.setBackground(seleccion);
+                this.setForeground(Color.white);
+            }
+
+            return this;
         }
-      JOptionPane.showMessageDialog(null, "Se guardo la venta temporalmente. ", "Ok", JOptionPane.INFORMATION_MESSAGE);
-       vaciartabla();
-       cargar_informacion();
-       ponerfocoenventa();       
-    }else{
-        JOptionPane.showMessageDialog(null, "No hay productos para guardar. ", "Error al generar ticket de cobro", JOptionPane.ERROR_MESSAGE);
-        ponerfocoenventa();
-    }
-}
-
-
-public boolean isValidDouble(String s) {
-    boolean isValid = true;
-
-    try {
-        Double.parseDouble(s);
-    } catch(NumberFormatException nfe) {
-        isValid = false;
     }
 
-    return isValid;
-}
+    public void poner_venta_pendiente() {
+        int numprod = jtproductos.getRowCount();
+        if (numprod > 0) {
+            java.util.Date date = new java.util.Date();
+            DateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss");
+            String codigobarras = "T" + dateFormat.format(date);
+            ArrayList productos = new ArrayList();
+            double monto = 0;
 
+            conex conlocal = new conex();
+            ResultSet rs = null;
+            try {
+                Statement st = conlocal.getConnection().createStatement();
+                for (int fila = 0; fila < jtproductos.getRowCount(); fila++) {
+                    //codigobarras   descriprod  preciounitario  cantidad  importe    existencia    idprod   descuento   ieps          
+                    productos.add(jtproductos.getValueAt(fila, 0).toString() + "@" + jtproductos.getValueAt(fila, 1).toString() + "@" + jtproductos.getValueAt(fila, 2).toString() + "@" + jtproductos.getValueAt(fila, 3).toString() + "@" + jtproductos.getValueAt(fila, 4).toString() + "@" + jtproductos.getValueAt(fila, 5).toString() + "@" + jtproductos.getValueAt(fila, 6).toString() + "@" + jtproductos.getValueAt(fila, 7).toString() + "@" + jtproductos.getValueAt(fila, 8).toString());
+                    monto = monto + Float.parseFloat(jtproductos.getValueAt(fila, 4).toString());
+                    String consul = "insert into to_pos_venta (folio,codbar,descprod,preciounitario,cantidad,importe,existencia,idprod,descuento,ieps,fecha,persona_atendio,tipo_venta)"
+                            + " values('" + codigobarras + "','" + jtproductos.getValueAt(fila, 0).toString() + "','" + jtproductos.getValueAt(fila, 1).toString() + "','" + jtproductos.getValueAt(fila, 2).toString() + "','" + jtproductos.getValueAt(fila, 3).toString() + "','" + jtproductos.getValueAt(fila, 4).toString() + "','" + jtproductos.getValueAt(fila, 5).toString() + "','" + jtproductos.getValueAt(fila, 6).toString() + "','" + jtproductos.getValueAt(fila, 7).toString() + "','" + jtproductos.getValueAt(fila, 8).toString() + "',now(),'" + accesoSistema.nombreuser + "','VENTATEMPORAL')";
+                    System.out.println("" + consul);
+                    st.executeUpdate(consul);
+                }
+                conlocal.desconectar();
+            } catch (SQLException ex) {
+
+            }
+            JOptionPane.showMessageDialog(null, "Se guardo la venta temporalmente. ", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            vaciartabla();
+            cargar_informacion();
+            ponerfocoenventa();
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay productos para guardar. ", "Error al generar ticket de cobro", JOptionPane.ERROR_MESSAGE);
+            ponerfocoenventa();
+        }
+    }
+
+    public boolean isValidDouble(String s) {
+        boolean isValid = true;
+
+        try {
+            Double.parseDouble(s);
+        } catch (NumberFormatException nfe) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
 
 }

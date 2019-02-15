@@ -5,10 +5,21 @@
  */
 package puntoventa;
 
+import bean.producto;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author famsa
  */
 public class variableEstaticas {
      public static String nombreCatalogo;
+     public static List<producto>lista=new ArrayList<producto>();
+     public static boolean controlVentas=false;
+     public static JTable tabla = new JTable();
+     public static DefaultTableModel modelTabla= new DefaultTableModel();
+     public static String cliente="";
 }
