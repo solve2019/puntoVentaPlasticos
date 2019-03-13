@@ -726,7 +726,7 @@ public class Ventas extends javax.swing.JInternalFrame implements KeyListener {
         cargar_informacion();
         //cargar_informacion();
         cobrar_venta();
-vaciartablaEstatica(variableEstaticas.tabla);
+//vaciartablaEstatica(variableEstaticas.tabla);
 
     }//GEN-LAST:event_jButton6ActionPerformed
 

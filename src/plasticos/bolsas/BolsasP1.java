@@ -154,8 +154,8 @@ public class BolsasP1 extends javax.swing.JFrame {
                                 p2vasoplas.setVisible(true);
                                 dispose();
                             } else if (nombre.equalsIgnoreCase("VASO TERMICO")) {
-                                P2vasoplastico p2vasoplas = new P2vasoplastico();
-                                p2vasoplas.setVisible(true);
+                                P2vasotermico p2vasoter = new P2vasotermico();
+                                p2vasoter.setVisible(true);
                                 dispose();
                             } else if (nombre.equalsIgnoreCase("PLATOS")) {
                                 P2platos p2platos = new P2platos();
